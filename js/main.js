@@ -30,17 +30,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Contact form handling
     const contactForm = document.getElementById('contact-form');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
 
-            // For now, show a success message
-            // In production, this would send to a backend or email service
-            alert('Thank you for your message! We will get back to you within 24 hours.');
-            contactForm.reset();
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            formStatus.classList.remove('success');
+            formStatus.textContent = '';
+
+            // Simulate API call
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+
+                // Show success message
+                formStatus.textContent = 'Thank you for your message! We will get back to you within 24 hours.';
+                formStatus.classList.add('success');
+
+                contactForm.reset();
+            }, 800);
         });
     }
 
