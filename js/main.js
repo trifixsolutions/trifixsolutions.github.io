@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (mobileToggle) {
         mobileToggle.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
+            const isActive = navLinks.classList.toggle('active');
+            mobileToggle.setAttribute('aria-expanded', isActive);
         });
     }
 
@@ -24,23 +25,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 // Close mobile menu if open
                 navLinks.classList.remove('active');
+                if (mobileToggle) {
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                }
             }
         });
     });
 
     // Contact form handling
     const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
+    const formStatus = document.getElementById('form-status');
+
+    if (contactForm && formStatus) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
             const formData = new FormData(contactForm);
             const data = Object.fromEntries(formData.entries());
 
-            // For now, show a success message
-            // In production, this would send to a backend or email service
-            alert('Thank you for your message! We will get back to you within 24 hours.');
+            // Display success message
+            formStatus.textContent = 'Thank you for your message! We will get back to you within 24 hours.';
+            formStatus.classList.add('success');
+
             contactForm.reset();
+
+            // Clear message after 5 seconds
+            setTimeout(() => {
+                formStatus.classList.remove('success');
+                formStatus.textContent = '';
+            }, 5000);
         });
     }
 

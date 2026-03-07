@@ -39,6 +39,18 @@ body {
     padding: 0 24px;
 }
 
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* Navigation */
 .navbar {
     position: fixed;
@@ -465,6 +477,22 @@ body {
 .form-group textarea {
     resize: vertical;
     min-height: 120px;
+}
+
+.form-status {
+    margin-top: -8px;
+    margin-bottom: 8px;
+    padding: 12px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    display: none;
+}
+
+.form-status.success {
+    display: block;
+    background: rgba(0, 212, 170, 0.1);
+    color: #008a6e;
+    border: 1px solid var(--accent);
 }
 
 /* Footer */
