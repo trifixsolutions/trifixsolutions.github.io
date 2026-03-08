@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (mobileToggle) {
         mobileToggle.addEventListener('click', function() {
+            const isExpanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+            mobileToggle.setAttribute('aria-expanded', !isExpanded);
             navLinks.classList.toggle('active');
         });
     }
@@ -24,23 +26,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 // Close mobile menu if open
                 navLinks.classList.remove('active');
+                mobileToggle.setAttribute('aria-expanded', 'false');
             }
         });
     });
 
     // Contact form handling
     const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
+    const formStatus = document.getElementById('form-status');
+
+    if (contactForm && formStatus) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
 
-            // For now, show a success message
-            // In production, this would send to a backend or email service
-            alert('Thank you for your message! We will get back to you within 24 hours.');
-            contactForm.reset();
+            // Simple loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            // Simulate form submission
+            setTimeout(() => {
+                formStatus.textContent = 'Thank you for your message! We will get back to you within 24 hours.';
+                formStatus.className = 'form-status success';
+                formStatus.classList.remove('visually-hidden');
+
+                contactForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    formStatus.classList.add('visually-hidden');
+                }, 5000);
+            }, 800);
         });
     }
 
