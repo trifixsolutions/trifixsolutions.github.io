@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.trifixsolutions.com/sitemap.xml
+Host: www.trifixsolutions.com
