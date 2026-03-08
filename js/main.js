@@ -1,56 +1,60 @@
-// Trifix Solutions - Website JavaScript
+document.addEventListener("DOMContentLoaded", () => {
+    const mobileToggle = document.querySelector(".mobile-toggle");
+    const navLinks = document.querySelector(".nav-links");
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
-    const mobileToggle = document.querySelector('.mobile-toggle');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (mobileToggle) {
-        mobileToggle.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
+    if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("active");
+            mobileToggle.setAttribute("aria-expanded", String(isOpen));
         });
     }
 
-    // Smooth scroll for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", (e) => {
+            const href = anchor.getAttribute("href");
+            if (!href || href === "#") {
+                return;
+            }
+            const target = document.querySelector(href);
+            if (!target) {
+                return;
+            }
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                const offsetTop = target.offsetTop - 80;
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
-                // Close mobile menu if open
-                navLinks.classList.remove('active');
+            const offset = target.getBoundingClientRect().top + window.scrollY - 74;
+            window.scrollTo({ top: offset, behavior: "smooth" });
+            if (navLinks) {
+                navLinks.classList.remove("active");
+            }
+            if (mobileToggle) {
+                mobileToggle.setAttribute("aria-expanded", "false");
             }
         });
     });
 
-    // Contact form handling
-    const contactForm = document.getElementById('contact-form');
+    const revealEls = Array.from(document.querySelectorAll(".reveal"));
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+            (entries, obs) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        obs.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.18 }
+        );
+        revealEls.forEach((el) => observer.observe(el));
+    } else {
+        revealEls.forEach((el) => el.classList.add("visible"));
+    }
+
+    const contactForm = document.getElementById("contact-form");
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener("submit", (e) => {
             e.preventDefault();
-
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
-
-            // For now, show a success message
-            // In production, this would send to a backend or email service
-            alert('Thank you for your message! We will get back to you within 24 hours.');
+            alert("Thanks for reaching out. Trifix Solutions will contact you within 24 hours.");
             contactForm.reset();
         });
     }
-
-    // Navbar background on scroll
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-        } else {
-            navbar.style.boxShadow = 'none';
-        }
-    });
 });

@@ -3,240 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Trifix Solutions - Reliable Internet Services, CCTV, Networking & IoT Solutions in Kenya">
-    <title>Trifix Solutions | Internet & Smart Solutions</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="Trifix Solutions delivers reliable internet, CCTV, networking, and IoT systems in Kenya.">
+    <title>Trifix Solutions | Connectivity + Security</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Navigation -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="#" class="logo">
-                <span class="logo-icon">△</span>
+            <a href="#top" class="logo">
+                <span class="logo-mark">△</span>
                 <span class="logo-text">TRIFIX</span>
             </a>
-            <button class="mobile-toggle" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="mobile-toggle" aria-label="Open navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
             </button>
             <ul class="nav-links">
                 <li><a href="#services">Services</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="#about">Why Us</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <li><a href="#contact" class="btn btn-primary">Get Started</a></li>
+                <li><a href="#contact" class="btn btn-primary">Start Project</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Connect. Secure. <span class="highlight">Simplify.</span></h1>
-                <p class="hero-subtitle">Reliable internet services and smart solutions for homes and businesses across Kenya.</p>
+    <header id="top" class="hero">
+        <div class="container hero-layout">
+            <div class="hero-content reveal">
+                <p class="eyebrow">Infrastructure for modern homes and businesses</p>
+                <h1>Fast internet. Sharp security. Smart control.</h1>
+                <p class="hero-subtitle">We design, install, and support dependable connectivity and protection systems across Kenya.</p>
                 <div class="hero-cta">
-                    <a href="#contact" class="btn btn-primary btn-lg">Get Connected</a>
-                    <a href="#services" class="btn btn-outline btn-lg">Our Services</a>
+                    <a href="#contact" class="btn btn-primary btn-lg">Book a Consultation</a>
+                    <a href="#services" class="btn btn-ghost btn-lg">Explore Services</a>
                 </div>
             </div>
-            <div class="hero-visual">
-                <div class="network-grid">
-                    <div class="node"></div>
-                    <div class="node"></div>
-                    <div class="node"></div>
-                    <div class="node center"></div>
-                    <div class="node"></div>
-                    <div class="node"></div>
-                    <div class="node"></div>
-                </div>
+            <div class="hero-panel reveal">
+                <p class="panel-title">Core Service Stack</p>
+                <ul>
+                    <li><span>01</span> ISP Connectivity (PPPoE + Hotspots)</li>
+                    <li><span>02</span> CCTV & Remote Monitoring</li>
+                    <li><span>03</span> Structured Office Networking</li>
+                    <li><span>04</span> Smart Home and IoT Integration</li>
+                </ul>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Services Section -->
     <section id="services" class="services">
         <div class="container">
-            <div class="section-header">
-                <h2>What We Offer</h2>
-                <p>End-to-end connectivity and security solutions tailored for you.</p>
+            <div class="section-head reveal">
+                <p class="eyebrow">Capabilities</p>
+                <h2>What Trifix builds and supports</h2>
             </div>
             <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🌐</div>
+                <article class="service-card reveal">
                     <h3>Internet Services</h3>
-                    <p>High-speed PPPoE and Hotspot solutions for residential and institutional clients. Reliable connectivity, competitive pricing.</p>
-                    <ul class="service-features">
-                        <li>Static PPPoE connections</li>
-                        <li>Public & private Hotspots</li>
+                    <p>Business and residential connectivity plans tuned for stability and low downtime.</p>
+                    <ul>
+                        <li>Static PPPoE links</li>
+                        <li>Public and private hotspots</li>
                         <li>Institutional packages</li>
                     </ul>
-                </div>
-                <div class="service-card featured">
-                    <div class="service-badge">Popular</div>
-                    <div class="service-icon">📹</div>
-                    <h3>CCTV & Security</h3>
-                    <p>Professional surveillance systems to protect what matters most. Remote monitoring, smart alerts, 24/7 recording.</p>
-                    <ul class="service-features">
-                        <li>HD/4K camera systems</li>
-                        <li>Remote mobile access</li>
-                        <li>Night vision & motion detection</li>
+                </article>
+                <article class="service-card spotlight reveal">
+                    <h3>CCTV and Security</h3>
+                    <p>Surveillance systems with clear footage, mobile access, and rapid incident visibility.</p>
+                    <ul>
+                        <li>HD and 4K camera layouts</li>
+                        <li>Night vision + motion analytics</li>
+                        <li>Remote viewing setup</li>
                     </ul>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🔌</div>
+                </article>
+                <article class="service-card reveal">
                     <h3>Structured Networking</h3>
-                    <p>Clean, professional network infrastructure for offices, buildings, and complexes. Future-proof cabling and setup.</p>
-                    <ul class="service-features">
-                        <li>Office network design</li>
-                        <li>Cat6/6a cabling</li>
-                        <li>Network documentation</li>
+                    <p>Organized and scalable network infrastructure for offices, compounds, and institutions.</p>
+                    <ul>
+                        <li>Network architecture planning</li>
+                        <li>Cat6 and Cat6a cabling</li>
+                        <li>Rack and switch configuration</li>
                     </ul>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🏠</div>
-                    <h3>Smart Home & IoT</h3>
-                    <p>Transform your space with intelligent automation. Smart security, lighting, energy management, and more.</p>
-                    <ul class="service-features">
-                        <li>Smart security systems</li>
-                        <li>Electric fence integration</li>
-                        <li>Automation & control</li>
+                </article>
+                <article class="service-card reveal">
+                    <h3>Smart Home and IoT</h3>
+                    <p>Practical automation for access control, lighting, energy, and perimeter defense.</p>
+                    <ul>
+                        <li>Smart security integration</li>
+                        <li>Electric fence automation</li>
+                        <li>Unified control setup</li>
                     </ul>
-                </div>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- Why Us Section -->
-    <section id="about" class="why-us">
-        <div class="container">
-            <div class="section-header">
-                <h2>Why Trifix?</h2>
-                <p>We're not just another ISP. We're your technology partner.</p>
+    <section id="about" class="about">
+        <div class="container about-grid">
+            <div class="about-copy reveal">
+                <p class="eyebrow">Why Trifix</p>
+                <h2>Local execution with enterprise thinking.</h2>
+                <p>We combine local service reliability with clean technical delivery. That means fewer vendor handoffs, faster support, and systems that stay usable after handover.</p>
             </div>
-            <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-number">01</div>
-                    <h3>Local Expertise</h3>
-                    <p>Based in Kenya, we understand the local landscape and challenges. Solutions that actually work here.</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-number">02</div>
-                    <h3>One Provider, Many Solutions</h3>
-                    <p>Internet, security, networking, smart systems — all under one roof. No juggling multiple vendors.</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-number">03</div>
-                    <h3>Support That Shows Up</h3>
-                    <p>When something breaks, we respond. Technical support that actually answers and solves problems.</p>
-                </div>
+            <div class="about-points">
+                <article class="point reveal"><h3>01</h3><p>Deep Kenya market experience and realistic deployment planning.</p></article>
+                <article class="point reveal"><h3>02</h3><p>One partner for internet, security, networking, and automation.</p></article>
+                <article class="point reveal"><h3>03</h3><p>Responsive support and practical troubleshooting when it matters.</p></article>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to get started?</h2>
-                <p>Let's discuss your connectivity and security needs. No obligation consultation.</p>
-                <a href="#contact" class="btn btn-primary btn-lg">Contact Us Today</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
     <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2>Get In Touch</h2>
-                <p>We'll get back to you within 24 hours.</p>
+        <div class="container contact-grid">
+            <div class="contact-meta reveal">
+                <p class="eyebrow">Contact</p>
+                <h2>Tell us what you need.</h2>
+                <p>Share your project scope and we will respond within 24 hours.</p>
+                <ul>
+                    <li><strong>Location:</strong> Kenya, East Africa</li>
+                    <li><strong>Email:</strong> info@trifixsolutions.com</li>
+                    <li><strong>Web:</strong> trifixsolutions.com</li>
+                </ul>
             </div>
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">📍</div>
-                        <div>
-                            <h4>Location</h4>
-                            <p>Kenya, East Africa</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📧</div>
-                        <div>
-                            <h4>Email</h4>
-                            <p>info@trifixsolutions.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">🌐</div>
-                        <div>
-                            <h4>Website</h4>
-                            <p>trifixsolutions.com</p>
-                        </div>
-                    </div>
-                </div>
-                <form class="contact-form" id="contact-form">
-                    <div class="form-group">
-                        <input type="text" name="name" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" name="email" placeholder="Email Address" required>
-                    </div>
-                    <div class="form-group">
-                        <select name="service">
-                            <option value="">Select Service</option>
-                            <option value="internet">Internet Services</option>
-                            <option value="cctv">CCTV & Security</option>
-                            <option value="networking">Structured Networking</option>
-                            <option value="iot">Smart Home / IoT</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <textarea name="message" placeholder="Tell us about your needs..." rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Send Message</button>
-                </form>
-            </div>
+            <form class="contact-form reveal" id="contact-form">
+                <label>Your Name<input type="text" name="name" required></label>
+                <label>Email Address<input type="email" name="email" required></label>
+                <label>Service
+                    <select name="service">
+                        <option value="">Select service</option>
+                        <option value="internet">Internet Services</option>
+                        <option value="cctv">CCTV and Security</option>
+                        <option value="networking">Structured Networking</option>
+                        <option value="iot">Smart Home and IoT</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+                <label>Project Details<textarea name="message" rows="4" required></textarea></label>
+                <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+            </form>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <a href="#" class="logo">
-                        <span class="logo-icon">△</span>
-                        <span class="logo-text">TRIFIX</span>
-                    </a>
-                    <p>Connect. Secure. Simplify.</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4>Services</h4>
-                        <ul>
-                            <li><a href="#services">Internet</a></li>
-                            <li><a href="#services">CCTV</a></li>
-                            <li><a href="#services">Networking</a></li>
-                            <li><a href="#services">IoT</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Company</h4>
-                        <ul>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Trifix Solutions. All rights reserved.</p>
-            </div>
+        <div class="container footer-row">
+            <a href="#top" class="logo"><span class="logo-mark">△</span><span class="logo-text">TRIFIX</span></a>
+            <p>&copy; 2026 Trifix Solutions. Connect. Secure. Simplify.</p>
         </div>
     </footer>
 
