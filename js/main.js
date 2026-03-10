@@ -50,11 +50,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const contactForm = document.getElementById("contact-form");
-    if (contactForm) {
+    const formStatus = document.getElementById("form-status");
+
+    if (contactForm && formStatus) {
         contactForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            alert("Thanks for reaching out. Trifix Solutions will contact you within 24 hours.");
-            contactForm.reset();
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending...";
+            formStatus.textContent = "";
+            formStatus.className = "form-status";
+
+            // Simulate submission
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+
+                formStatus.textContent = "Thanks for reaching out. Trifix Solutions will contact you within 24 hours.";
+                formStatus.classList.add("success");
+                contactForm.reset();
+            }, 1000);
         });
     }
 });
