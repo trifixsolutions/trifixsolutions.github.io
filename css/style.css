@@ -165,6 +165,28 @@ h1, h2, h3, .logo-text { font-family: "Space Grotesk", sans-serif; }
     border-color: var(--brand);
 }
 
+.form-status {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.form-status:empty { display: none; }
+
+.form-status.success {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 .footer { border-top: 1px solid var(--line); padding: 26px 0 32px; }
 .footer-row {
     display: flex;
