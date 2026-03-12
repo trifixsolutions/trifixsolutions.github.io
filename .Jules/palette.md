@@ -1,0 +1,3 @@
+## 2024-05-24 - Async Form Feedback & Layering
+**Learning:** Browser `alert()` calls disrupt the user flow and are not accessible. A dedicated `#form-status` element with `aria-live="polite"` and CSS `:empty { display: none }` provides a smooth, non-disruptive feedback loop without causing layout shifts. Additionally, decorative hero elements (like background orbs) require fixed navigation to have a high z-index (1001+) to maintain visibility and accessibility.
+**Action:** Replace blocking alerts with async status containers and verify that fixed header z-index and scroll offsets account for all visual layers and borders.
