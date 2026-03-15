@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             e.preventDefault();
-            const offset = target.getBoundingClientRect().top + window.scrollY - 74;
+            const offset = target.getBoundingClientRect().top + window.scrollY - 79;
             window.scrollTo({ top: offset, behavior: "smooth" });
             if (navLinks) {
                 navLinks.classList.remove("active");
@@ -51,10 +51,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const contactForm = document.getElementById("contact-form");
     if (contactForm) {
+        const status = document.getElementById("form-status");
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+
         contactForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            alert("Thanks for reaching out. Trifix Solutions will contact you within 24 hours.");
-            contactForm.reset();
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Sending...";
+            }
+
+            // Simulate form submission
+            setTimeout(() => {
+                if (status) {
+                    status.textContent = "Thanks for reaching out! We'll contact you within 24 hours.";
+                }
+                contactForm.reset();
+
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Send Message";
+                }
+            }, 1000);
         });
     }
 });
