@@ -29,7 +29,7 @@
     <nav class="navbar">
         <div class="container nav-container">
             <a href="#top" class="logo">
-                <span class="logo-mark">△</span>
+                <span class="logo-mark" aria-hidden="true">△</span>
                 <span class="logo-text">TRIFIX</span>
             </a>
             <button class="mobile-toggle" aria-label="Open navigation" aria-expanded="false">
@@ -44,6 +44,7 @@
         </div>
     </nav>
 
+    <main>
     <header id="top" class="hero">
         <div class="container hero-layout">
             <div class="hero-content reveal">
@@ -142,27 +143,35 @@
                 </ul>
             </div>
             <form class="contact-form reveal" id="contact-form">
-                <label>Your Name<input type="text" name="name" required></label>
-                <label>Email Address<input type="email" name="email" required></label>
-                <label>Service
-                    <select name="service">
-                        <option value="">Select service</option>
-                        <option value="internet">Internet Services</option>
-                        <option value="cctv">CCTV and Security</option>
-                        <option value="networking">Structured Networking</option>
-                        <option value="iot">Smart Home and IoT</option>
-                        <option value="other">Other</option>
-                    </select>
-                </label>
-                <label>Project Details<textarea name="message" rows="4" required></textarea></label>
+                <label for="name">Your Name <abbr title="required" class="required">*</abbr></label>
+                <input type="text" id="name" name="name" autocomplete="name" required>
+
+                <label for="email">Email Address <abbr title="required" class="required">*</abbr></label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+
+                <label for="service">Service</label>
+                <select id="service" name="service">
+                    <option value="">Select service</option>
+                    <option value="internet">Internet Services</option>
+                    <option value="cctv">CCTV and Security</option>
+                    <option value="networking">Structured Networking</option>
+                    <option value="iot">Smart Home and IoT</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <label for="message">Project Details <abbr title="required" class="required">*</abbr></label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+
+                <div id="form-status" aria-live="polite"></div>
                 <button type="submit" class="btn btn-primary btn-block">Send Message</button>
             </form>
         </div>
     </section>
+    </main>
 
     <footer class="footer">
         <div class="container footer-row">
-            <a href="#top" class="logo"><span class="logo-mark">△</span><span class="logo-text">TRIFIX</span></a>
+            <a href="#top" class="logo"><span class="logo-mark" aria-hidden="true">△</span><span class="logo-text">TRIFIX</span></a>
             <p>&copy; 2026 Trifix Solutions. Connect. Secure. Simplify.</p>
         </div>
     </footer>
