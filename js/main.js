@@ -1,75 +1,216 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const mobileToggle = document.querySelector(".mobile-toggle");
-    const navLinks = document.querySelector(".nav-links");
+// ========================================
+// TRIFIX SOLUTIONS - Main JavaScript
+// ========================================
 
-    if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener("click", () => {
-            const isOpen = navLinks.classList.toggle("active");
-            mobileToggle.setAttribute("aria-expanded", String(isOpen));
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Navigation scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+    
+    // Mobile menu toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    
+    navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        const icon = navToggle.querySelector('i');
+        if (navLinks.classList.contains('active')) {
+            icon.setAttribute('data-lucide', 'x');
+        } else {
+            icon.setAttribute('data-lucide', 'menu');
+        }
+        lucide.createIcons();
+    });
+    
+    // Close mobile menu on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            const icon = navToggle.querySelector('i');
+            icon.setAttribute('data-lucide', 'menu');
+            lucide.createIcons();
         });
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", (e) => {
-            const href = anchor.getAttribute("href");
-            if (!href || href === "#") {
-                return;
-            }
-            const target = document.querySelector(href);
-            if (!target) {
-                return;
-            }
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            // Header height (78px) + 1px border
-            const offset = target.getBoundingClientRect().top + window.scrollY - 79;
-            window.scrollTo({ top: offset, behavior: "smooth" });
-            if (navLinks) {
-                navLinks.classList.remove("active");
-            }
-            if (mobileToggle) {
-                mobileToggle.setAttribute("aria-expanded", "false");
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const offsetTop = target.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
             }
         });
     });
-
-    const revealEls = Array.from(document.querySelectorAll(".reveal"));
-    if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
-            (entries, obs) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("visible");
-                        obs.unobserve(entry.target);
-                    }
-                });
+    
+    // Hero animations
+    gsap.from('.hero-badge', {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        delay: 0.2
+    });
+    
+    gsap.from('.hero-title .line', {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        stagger: 0.2,
+        delay: 0.4
+    });
+    
+    gsap.from('.hero-subtitle', {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        delay: 0.8
+    });
+    
+    gsap.from('.hero-cta .btn', {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        stagger: 0.15,
+        delay: 1
+    });
+    
+    // Stats counter animation
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach(stat => {
+        const target = parseInt(stat.getAttribute('data-count'));
+        
+        gsap.to(stat, {
+            scrollTrigger: {
+                trigger: stat,
+                start: 'top 80%'
             },
-            { threshold: 0.18 }
-        );
-        revealEls.forEach((el) => observer.observe(el));
-    } else {
-        revealEls.forEach((el) => el.classList.add("visible"));
-    }
-
-    const contactForm = document.getElementById("contact-form");
-    if (contactForm) {
-        const formStatus = document.getElementById("form-status");
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-
-        contactForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Sending...";
-            formStatus.textContent = "";
-
-            // Simulate form submission
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalBtnText;
-                formStatus.textContent = "Thanks for reaching out. Trifix Solutions will contact you within 24 hours.";
-                contactForm.reset();
-            }, 1000);
+            innerHTML: target,
+            duration: 2,
+            snap: { innerHTML: 1 },
+            delay: 0.5
+        });
+    });
+    
+    // Service cards animation
+    gsap.utils.toArray('.service-card').forEach((card, i) => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: (i % 3) * 0.1
+        });
+    });
+    
+    // About section animation
+    gsap.from('.about-image', {
+        scrollTrigger: {
+            trigger: '.about',
+            start: 'top 60%'
+        },
+        opacity: 0,
+        x: -50,
+        duration: 1
+    });
+    
+    gsap.from('.about-content', {
+        scrollTrigger: {
+            trigger: '.about',
+            start: 'top 60%'
+        },
+        opacity: 0,
+        x: 50,
+        duration: 1
+    });
+    
+    // Contact channels animation
+    gsap.utils.toArray('.channel-item').forEach((item, i) => {
+        gsap.to(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 85%'
+            },
+            opacity: 1,
+            x: 0,
+            duration: 0.6,
+            delay: i * 0.1
+        });
+    });
+    
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 50;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 4 + 1}px;
+            height: ${Math.random() * 4 + 1}px;
+            background: ${Math.random() > 0.5 ? 'rgba(0, 212, 255, 0.5)' : 'rgba(139, 92, 246, 0.5)'};
+            border-radius: 50%;
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            pointer-events: none;
+        `;
+        particlesContainer.appendChild(particle);
+        
+        gsap.to(particle, {
+            y: -Math.random() * 200 - 100,
+            x: (Math.random() - 0.5) * 100,
+            opacity: 0,
+            duration: Math.random() * 5 + 5,
+            repeat: -1,
+            delay: Math.random() * 5
         });
     }
+    
+    // Form submission feedback
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span>Sending...</span>';
+            submitBtn.disabled = true;
+            
+            // Re-enable after timeout (form will submit to formsubmit.co)
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                lucide.createIcons();
+            }, 3000);
+        });
+    }
+    
+    // Parallax effect on hero
+    window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        const heroContent = document.querySelector('.hero-content');
+        if (heroContent && scrolled < window.innerHeight) {
+            heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+            heroContent.style.opacity = 1 - (scrolled / window.innerHeight);
+        }
+    });
+    
+    console.log('🚀 Trifix Solutions website loaded');
 });

@@ -3,295 +3,456 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Trifix Solutions delivers reliable internet, CCTV, networking, and IoT systems in Kenya.">
-    <meta name="robots" content="index, follow">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Trifix Solutions | Connectivity + Security">
-    <meta property="og:description" content="Reliable internet, CCTV, networking, and IoT systems in Kenya.">
-    <meta property="og:url" content="https://www.trifixsolutions.com/">
-    <meta property="og:image" content="https://www.trifixsolutions.com/assets/og-cover.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Trifix Solutions | Connectivity + Security">
-    <meta name="twitter:description" content="Reliable internet, CCTV, networking, and IoT systems in Kenya.">
-    <link rel="canonical" href="https://www.trifixsolutions.com/">
-    <title>Trifix Solutions | Connectivity + Security</title>
+    <title>Trifix Solutions | IT Services & Internet Solutions Kenya</title>
+    <meta name="description" content="Trifix Solutions - Your trusted partner for Internet Services, CCTV, Networking, Computer Repairs, Software Solutions, and ICT Consultancy in Nairobi, Kenya.">
+    <meta name="keywords" content="ISP Kenya, Internet provider Nairobi, CCTV installation, networking, computer repairs, web design, ICT consultancy">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="manifest" href="/site.webmanifest">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="#top" class="logo">
-                <span class="logo-mark" aria-hidden="true">△</span>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
                 <span class="logo-text">TRIFIX</span>
+                <span class="logo-accent">SOLUTIONS</span>
             </a>
-            <button class="mobile-toggle" aria-label="Open navigation" aria-expanded="false">
-                <span></span><span></span><span></span>
+            <div class="nav-links" id="navLinks">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="tel:+254794123457" class="nav-phone">
+                    <i data-lucide="phone"></i>
+                    <span>0794 123 457</span>
+                </a>
+                <a href="https://wa.me/254794123457" class="btn btn-primary btn-sm" target="_blank">
+                    <i data-lucide="message-circle"></i>
+                    WhatsApp
+                </a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <i data-lucide="menu"></i>
             </button>
-            <ul class="nav-links">
-                <li><a href="#services">Services</a></li>
-                <li><a href="#about">Why Us</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#contact" class="btn btn-primary">Start Project</a></li>
-            </ul>
         </div>
     </nav>
 
-    <header id="top" class="hero">
-        <div class="container hero-layout">
-            <div class="hero-content reveal">
-                <p class="eyebrow">Infrastructure for modern homes and businesses</p>
-                <h1>Fast internet. Sharp security. Smart control.</h1>
-                <p class="hero-subtitle">We design, install, and support dependable connectivity and protection systems across Kenya.</p>
-                <div class="hero-cta">
-                    <a href="#contact" class="btn btn-primary btn-lg">Book a Consultation</a>
-                    <a href="#services" class="btn btn-ghost btn-lg">Explore Services</a>
-                </div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-video-container">
+            <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80">
+                <source src="https://cdn.coverr.co/videos/coverr-network-cables-in-a-server-room-5764/1080p.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-particles" id="particles"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i data-lucide="zap"></i>
+                <span>Trusted IT Partner in Kenya</span>
             </div>
-            <div class="hero-panel reveal">
-                <p class="panel-title">What We Offer</p>
-                <ul>
-                    <li><span>01</span> Internet & Networking</li>
-                    <li><span>02</span> CCTV & Security Systems</li>
-                    <li><span>03</span> Computer Sales & Repairs</li>
-                    <li><span>04</span> Software & Web Solutions</li>
-                </ul>
+            <h1 class="hero-title">
+                <span class="line">Technology Solutions</span>
+                <span class="line accent">That Power Your Business</span>
+            </h1>
+            <p class="hero-subtitle">
+                From internet connectivity to complete IT infrastructure — we deliver reliable, 
+                scalable solutions for businesses across Kenya.
+            </p>
+            <div class="hero-cta">
+                <a href="#contact" class="btn btn-primary btn-lg">
+                    Get Started <i data-lucide="arrow-right"></i>
+                </a>
+                <a href="#services" class="btn btn-outline btn-lg">Explore Services</a>
             </div>
         </div>
-    </header>
 
-    <section id="services" class="services">
-        <div class="container">
-            <div class="section-head reveal">
-                <p class="eyebrow">Capabilities</p>
-                <h2>What Trifix builds and supports</h2>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number" data-count="500">0</span>
+                <span class="stat-label">Clients Served</span>
             </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="1000">0</span>
+                <span class="stat-label">Projects Completed</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="5">0</span>
+                <span class="stat-label">Years Experience</span>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="mouse"><div class="wheel"></div></div>
+            <span>Scroll to explore</span>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">What We Offer</span>
+                <h2 class="section-title">Comprehensive IT Solutions</h2>
+                <p class="section-subtitle">End-to-end technology services designed to keep your business connected, secure, and ahead of the curve.</p>
+            </div>
+
             <div class="services-grid">
-                <article class="service-card reveal">
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="wifi"></i></div>
                     <h3>Internet Services</h3>
-                    <p>Business and residential connectivity plans tuned for stability and low downtime.</p>
-                    <ul>
-                        <li>Static PPPoE links</li>
-                        <li>Public and private hotspots</li>
-                        <li>Institutional packages</li>
+                    <p>Reliable high-speed internet connectivity for homes and businesses across Nairobi.</p>
+                    <ul class="service-features">
+                        <li>PPPoE dedicated connections</li>
+                        <li>Hotspot solutions</li>
+                        <li>Unlimited data packages</li>
                     </ul>
                 </article>
-                <article class="service-card spotlight reveal">
-                    <h3>CCTV and Security</h3>
-                    <p>Surveillance systems with clear footage, mobile access, and rapid incident visibility.</p>
-                    <ul>
-                        <li>HD and 4K camera layouts</li>
-                        <li>Night vision + motion analytics</li>
-                        <li>Remote viewing setup</li>
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="video"></i></div>
+                    <h3>CCTV & Security</h3>
+                    <p>Advanced surveillance systems with remote monitoring and smart alerts.</p>
+                    <ul class="service-features">
+                        <li>IP camera installation</li>
+                        <li>Remote monitoring setup</li>
+                        <li>Motion detection & alerts</li>
                     </ul>
                 </article>
-                <article class="service-card reveal">
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="network"></i></div>
                     <h3>Structured Networking</h3>
-                    <p>Organized and scalable network infrastructure for offices, compounds, and institutions.</p>
-                    <ul>
-                        <li>Network architecture planning</li>
-                        <li>Cat6 and Cat6a cabling</li>
-                        <li>Rack and switch configuration</li>
+                    <p>Professional network infrastructure for offices, buildings, and campuses.</p>
+                    <ul class="service-features">
+                        <li>Cat6 cabling</li>
+                        <li>Network design & planning</li>
+                        <li>Server room setup</li>
                     </ul>
                 </article>
-                                <article class="service-card reveal">
-                    <h3>Smart Home and IoT</h3>
-                    <p>Practical automation for access control, lighting, energy, and perimeter defense.</p>
-                    <ul>
-                        <li>Smart security integration</li>
-                        <li>Electric fence automation</li>
-                        <li>Unified control setup</li>
-                    </ul>
-                </article>
-                <article class="service-card reveal">
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="monitor"></i></div>
                     <h3>Computer Sales & Repairs</h3>
                     <p>Laptops, desktops, accessories, and expert repair services for all major brands.</p>
-                    <ul>
+                    <ul class="service-features">
                         <li>Laptop & desktop sales</li>
-                        <li>Hardware diagnostics & repair</li>
+                        <li>Hardware diagnostics</li>
                         <li>Computer accessories</li>
                     </ul>
                 </article>
-                <article class="service-card reveal">
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="printer"></i></div>
                     <h3>Printer Services</h3>
                     <p>Keep your office running with printer repairs, maintenance, and toner supplies.</p>
-                    <ul>
+                    <ul class="service-features">
                         <li>Printer repair & servicing</li>
                         <li>Toner refill & cartridges</li>
                         <li>Multi-function device setup</li>
                     </ul>
                 </article>
-                <article class="service-card reveal">
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="shield-check"></i></div>
                     <h3>Access Control & Intercoms</h3>
                     <p>Secure your premises with biometric systems, intercoms, and PBX phone systems.</p>
-                    <ul>
+                    <ul class="service-features">
                         <li>Biometric access systems</li>
                         <li>Intercom installation</li>
                         <li>PBX & office phone setup</li>
                     </ul>
                 </article>
-                <article class="service-card reveal">
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="home"></i></div>
+                    <h3>Smart Home & IoT</h3>
+                    <p>Practical automation for access control, lighting, energy, and perimeter defense.</p>
+                    <ul class="service-features">
+                        <li>Smart security integration</li>
+                        <li>Electric fence automation</li>
+                        <li>Unified control setup</li>
+                    </ul>
+                </article>
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="code-2"></i></div>
+                    <h3>Web Development</h3>
+                    <p>Modern, responsive websites and web applications tailored to your business needs.</p>
+                    <ul class="service-features">
+                        <li>Business websites</li>
+                        <li>E-commerce solutions</li>
+                        <li>Custom web applications</li>
+                    </ul>
+                </article>
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="software"></i></div>
                     <h3>Software & Support</h3>
                     <p>From software installation to ongoing remote support, we keep your systems running.</p>
-                    <ul>
-                        <li>Software installation & setup</li>
-                        <li>Remote support & maintenance</li>
+                    <ul class="service-features">
+                        <li>Software installation</li>
+                        <li>Remote support</li>
                         <li>System troubleshooting</li>
                     </ul>
                 </article>
-                <article class="service-card reveal">
-                    <h3>Bulk SMS & Communication</h3>
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="message-square"></i></div>
+                    <h3>Bulk SMS</h3>
                     <p>Reach your customers directly with bulk SMS campaigns and automated messaging.</p>
-                    <ul>
+                    <ul class="service-features">
                         <li>Bulk SMS marketing</li>
-                        <li>Automated alerts & reminders</li>
-                        <li>Customer engagement tools</li>
+                        <li>Automated alerts</li>
+                        <li>Customer engagement</li>
                     </ul>
                 </article>
-                <article class="service-card reveal">
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="palette"></i></div>
                     <h3>Graphic Design</h3>
                     <p>Professional design services for branding, marketing materials, and digital content.</p>
-                    <ul>
+                    <ul class="service-features">
                         <li>Logo & brand identity</li>
                         <li>Marketing materials</li>
                         <li>Social media graphics</li>
                     </ul>
                 </article>
-                <article class="service-card reveal">
+
+                <article class="service-card">
+                    <div class="service-icon"><i data-lucide="lightbulb"></i></div>
                     <h3>ICT Consultancy</h3>
                     <p>Expert guidance on technology strategy, infrastructure planning, and digital transformation.</p>
-                    <ul>
+                    <ul class="service-features">
                         <li>IT infrastructure assessment</li>
                         <li>Technology roadmapping</li>
-                        <li>Digital transformation advisory</li>
+                        <li>Digital transformation</li>
                     </ul>
                 </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1560472355-536de3962603?w=800&q=80" alt="Server room" loading="lazy">
+                    <div class="about-image-overlay">
+                        <div class="experience-badge">
+                            <span class="exp-number">5+</span>
+                            <span class="exp-text">Years of Excellence</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <span class="section-tag">About Trifix</span>
+                    <h2 class="section-title">Your Technology Partner for Growth</h2>
+                    <p>Trifix Solutions is a Nairobi-based IT services company dedicated to delivering reliable, affordable technology solutions to businesses and homes across Kenya.</p>
+                    <p>We started with a simple mission: bridge the technology gap for small and medium businesses. Today, we've grown into a comprehensive IT partner offering everything from internet connectivity to complete digital transformation.</p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item"><i data-lucide="check-circle-2"></i><span>Reliable & Fast Service</span></div>
+                        <div class="feature-item"><i data-lucide="check-circle-2"></i><span>Affordable Pricing</span></div>
+                        <div class="feature-item"><i data-lucide="check-circle-2"></i><span>Expert Technical Team</span></div>
+                        <div class="feature-item"><i data-lucide="check-circle-2"></i><span>24/7 Support Available</span></div>
+                    </div>
+
+                    <a href="#contact" class="btn btn-primary">Work With Us <i data-lucide="arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Technology?</h2>
+                <p>Let's discuss how we can help your business grow with the right IT solutions.</p>
+                <div class="cta-buttons">
+                    <a href="tel:+254794123457" class="btn btn-light btn-lg"><i data-lucide="phone"></i> Call Now</a>
+                    <a href="https://wa.me/254794123457" class="btn btn-outline-light btn-lg" target="_blank"><i data-lucide="message-circle"></i> WhatsApp Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <span class="section-tag">Get In Touch</span>
+                    <h2 class="section-title">Let's Start a Conversation</h2>
+                    <p>Have a question or need a quote? Reach out and we'll get back to you within 24 hours.</p>
+
+                    <div class="contact-channels">
+                        <a href="tel:+254794123457" class="channel-item">
+                            <div class="channel-icon"><i data-lucide="phone"></i></div>
+                            <div class="channel-details">
+                                <span class="channel-label">Call Us</span>
+                                <span class="channel-value">0794 123 457</span>
+                            </div>
+                        </a>
+
+                        <a href="https://wa.me/254794123457" class="channel-item" target="_blank">
+                            <div class="channel-icon whatsapp"><i data-lucide="message-circle"></i></div>
+                            <div class="channel-details">
+                                <span class="channel-label">WhatsApp</span>
+                                <span class="channel-value">Chat with us</span>
+                            </div>
+                        </a>
+
+                        <a href="mailto:trifixsolutions@gmail.com" class="channel-item">
+                            <div class="channel-icon"><i data-lucide="mail"></i></div>
+                            <div class="channel-details">
+                                <span class="channel-label">Email</span>
+                                <span class="channel-value">trifixsolutions@gmail.com</span>
+                            </div>
+                        </a>
+
+                        <div class="channel-item">
+                            <div class="channel-icon"><i data-lucide="map-pin"></i></div>
+                            <div class="channel-details">
+                                <span class="channel-label">Location</span>
+                                <span class="channel-value">Nairobi, Kenya</span>
+                            </div>
+                        </div>
+
+                        <div class="channel-item">
+                            <div class="channel-icon"><i data-lucide="clock"></i></div>
+                            <div class="channel-details">
+                                <span class="channel-label">Working Hours</span>
+                                <span class="channel-value">Mon - Sat: 8AM - 6PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contactForm" action="https://formsubmit.co/trifixsolutions@gmail.com" method="POST">
+                        <input type="hidden" name="_subject" value="New inquiry from Trifix Website">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required placeholder="John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+254 7XX XXX XXX">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="service">Service Interested In</label>
+                            <select id="service" name="service">
+                                <option value="">Select a service</option>
+                                <option value="internet">Internet Services</option>
+                                <option value="cctv">CCTV & Security</option>
+                                <option value="networking">Structured Networking</option>
+                                <option value="computers">Computer Sales & Repairs</option>
+                                <option value="printers">Printer Services</option>
+                                <option value="access">Access Control & Intercoms</option>
+                                <option value="smarthome">Smart Home & IoT</option>
+                                <option value="web">Web Development</option>
+                                <option value="software">Software & Support</option>
+                                <option value="sms">Bulk SMS</option>
+                                <option value="design">Graphic Design</option>
+                                <option value="consultancy">ICT Consultancy</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" name="message" rows="4" placeholder="Tell us about your project or requirements..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg btn-full">
+                            Send Message <i data-lucide="send"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <span class="logo-text">TRIFIX</span>
+                        <span class="logo-accent">SOLUTIONS</span>
+                    </a>
+                    <p>Your trusted technology partner for IT services, internet solutions, and digital transformation in Kenya.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#services">Internet Services</a></li>
+                        <li><a href="#services">CCTV & Security</a></li>
+                        <li><a href="#services">Networking</a></li>
+                        <li><a href="#services">Computer Repairs</a></li>
+                        <li><a href="#services">Web Development</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4>Get In Touch</h4>
+                    <ul>
+                        <li><i data-lucide="phone"></i> <a href="tel:+254794123457">0794 123 457</a></li>
+                        <li><i data-lucide="mail"></i> <a href="mailto:trifixsolutions@gmail.com">trifixsolutions@gmail.com</a></li>
+                        <li><i data-lucide="map-pin"></i> Nairobi, Kenya</li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="section-head reveal" style="margin-top: 4rem;">
-                <p class="eyebrow">Software</p>
-                <h2>Digital Solutions for Modern Business</h2>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Trifix Solutions. All rights reserved.</p>
+                <p>Designed with <i data-lucide="heart" class="heart"></i> in Nairobi</p>
             </div>
-            <div class="services-grid">
-                <article class="service-card reveal">
-                    <h3>School Management Systems</h3>
-                    <p>Complete digital platform for schools to manage students, fees, attendance, and communication.</p>
-                    <ul>
-                        <li>Student records & grading</li>
-                        <li>M-Pesa fee collection</li>
-                        <li>Parent SMS/WhatsApp alerts</li>
-                    </ul>
-                </article>
-                <article class="service-card spotlight reveal">
-                    <h3>Inventory & POS Systems</h3>
-                    <p>Track stock, process sales, and generate reports with ease. Built for Kenyan SMEs.</p>
-                    <ul>
-                        <li>Real-time inventory tracking</li>
-                        <li>Sales analytics & reports</li>
-                        <li>eTIMS integration ready</li>
-                    </ul>
-                </article>
-                <article class="service-card reveal">
-                    <h3>Website Development</h3>
-                    <p>Professional websites that work for your business. From landing pages to full e-commerce.</p>
-                    <ul>
-                        <li>Responsive design</li>
-                        <li>SEO optimization</li>
-                        <li>Content management</li>
-                    </ul>
-                </article>
-                <article class="service-card reveal">
-                    <h3>Custom Software Solutions</h3>
-                    <p>Need something unique? We build custom systems tailored to your specific business needs.</p>
-                    <ul>
-                        <li>Apartment management</li>
-                        <li>Booking & scheduling</li>
-                        <li>Business automation</li>
-                    </ul>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="about">
-        <div class="container about-grid">
-            <div class="about-copy reveal">
-                <p class="eyebrow">Why Trifix</p>
-                <h2>Local execution with enterprise thinking.</h2>
-                <p>We combine local service reliability with clean technical delivery. That means fewer vendor handoffs, faster support, and systems that stay usable after handover.</p>
-            </div>
-            <div class="about-points">
-                <article class="point reveal"><h3>01</h3><p>Deep Kenya market experience and realistic deployment planning.</p></article>
-                <article class="point reveal"><h3>02</h3><p>One partner for internet, security, networking, and automation.</p></article>
-                <article class="point reveal"><h3>03</h3><p>Responsive support and practical troubleshooting when it matters.</p></article>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="contact">
-        <div class="container contact-grid">
-            <div class="contact-meta reveal">
-                <p class="eyebrow">Contact</p>
-                <h2>Tell us what you need.</h2>
-                <p>Share your project scope and we will respond within 24 hours.</p>
-                <ul>
-                    <li><strong>Location:</strong> Kenya, East Africa</li>
-                    <li><strong>Email:</strong> info@trifixsolutions.com</li>
-                    <li><strong>Web:</strong> trifixsolutions.com</li>
-                </ul>
-            </div>
-            <form class="contact-form reveal" id="contact-form">
-                <label for="name"><span>Your Name <abbr title="required" class="required">*</abbr></span>
-                    <input type="text" id="name" name="name" autocomplete="name" required>
-                </label>
-                <label for="email"><span>Email Address <abbr title="required" class="required">*</abbr></span>
-                    <input type="email" id="email" name="email" autocomplete="email" required>
-                </label>
-                <label for="service">Service
-                    <select id="service" name="service">
-                        <option value="">Select service</option>
-                        <option value="internet">Internet Services</option>
-                        <option value="cctv">CCTV and Security</option>
-                        <option value="networking">Structured Networking</option>
-                        <option value="iot">Smart Home and IoT</option>
-                        <option value="computers">Computer Sales & Repairs</option>
-                        <option value="printers">Printer Services</option>
-                        <option value="access">Access Control & Intercoms</option>
-                        <option value="software">Software & Support</option>
-                        <option value="sms">Bulk SMS</option>
-                        <option value="design">Graphic Design</option>
-                        <option value="consultancy">ICT Consultancy</option>
-                        <option value="school">School Management System</option>
-                        <option value="pos">Inventory & POS Systems</option>
-                        <option value="website">Website Development</option>
-                        <option value="custom">Custom Software</option>
-                        <option value="other">Other</option>
-                    </select>
-                </label>
-                <label for="message"><span>Project Details <abbr title="required" class="required">*</abbr></span>
-                    <textarea id="message" name="message" rows="4" required></textarea>
-                </label>
-                <button type="submit" class="btn btn-primary btn-block">Send Message</button>
-                <div id="form-status" aria-live="polite" class="form-status"></div>
-            </form>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container footer-row">
-            <a href="#top" class="logo"><span class="logo-mark" aria-hidden="true">△</span><span class="logo-text">TRIFIX</span></a>
-            <p>&copy; 2026 Trifix Solutions. Connect. Secure. Simplify.</p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
 </body>
 </html>
-
