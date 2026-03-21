@@ -15,6 +15,10 @@
 
 html { scroll-behavior: smooth; }
 
+header[id], section[id], main[id] {
+    scroll-margin-top: 79px;
+}
+
 body {
     font-family: "IBM Plex Sans", sans-serif;
     color: var(--ink);
@@ -173,7 +177,7 @@ h1, h2, h3, .logo-text { font-family: "Space Grotesk", sans-serif; }
     display: none;
 }
 
-.visually-hidden {
+.visually-hidden, .skip-link:not(:focus) {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -183,6 +187,20 @@ h1, h2, h3, .logo-text { font-family: "Space Grotesk", sans-serif; }
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+.skip-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: var(--brand);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    z-index: 2000;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: var(--shadow);
 }
 
 .contact-form input,
@@ -247,3 +265,5 @@ h1, h2, h3, .logo-text { font-family: "Space Grotesk", sans-serif; }
 
     .nav-links.active { display: flex; }
 }
+
+[tabindex="-1"]:focus { outline: none; }
