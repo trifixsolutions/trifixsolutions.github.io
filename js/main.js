@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Header height (78px) + 1px border
             const offset = target.getBoundingClientRect().top + window.scrollY - 79;
             window.scrollTo({ top: offset, behavior: "smooth" });
+            target.focus();
             if (navLinks) {
                 navLinks.classList.remove("active");
             }
