@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.getElementById('navLinks');
     
     navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+        const isActive = navLinks.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', isActive);
+
         const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
+        if (isActive) {
             icon.setAttribute('data-lucide', 'x');
         } else {
             icon.setAttribute('data-lucide', 'menu');
@@ -38,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+
             const icon = navToggle.querySelector('i');
             icon.setAttribute('data-lucide', 'menu');
             lucide.createIcons();
@@ -55,6 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Set focus to target for accessibility
+                target.focus({ preventScroll: true });
+                if (document.activeElement !== target) {
+                    target.setAttribute('tabindex', '-1');
+                    target.focus({ preventScroll: true });
+                }
             }
         });
     });
@@ -186,19 +197,61 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+
+            // Update button state
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> <span>Sending...</span>';
             submitBtn.disabled = true;
+            lucide.createIcons();
+
+            // Clear previous status
+            if (formStatus) {
+                formStatus.innerHTML = '';
+                formStatus.className = 'form-status';
+            }
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (formStatus) {
+                        formStatus.innerHTML = '<i data-lucide="check-circle"></i> <span>Thank you! Your message has been sent successfully.</span>';
+                        formStatus.classList.add('success');
+                    }
+                    contactForm.reset();
+                } else {
+                    throw new Error(result.message || 'Form submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                if (formStatus) {
+                    formStatus.innerHTML = '<i data-lucide="alert-circle"></i> <span>Oops! Something went wrong. Please try again later.</span>';
+                    formStatus.classList.add('error');
+                }
+            } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     

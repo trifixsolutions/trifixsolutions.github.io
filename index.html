@@ -41,7 +41,7 @@
                     WhatsApp
                 </a>
             </div>
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
                 <i data-lucide="menu"></i>
             </button>
         </div>
@@ -349,13 +349,13 @@
                         <input type="hidden" name="_template" value="table">
                         
                         <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" name="name" required placeholder="John Doe">
+                            <label for="name"><span>Your Name</span> <abbr class="required" title="required" aria-hidden="true">*</abbr></label>
+                            <input type="text" id="name" name="name" required placeholder="John Doe" autocomplete="name">
                         </div>
                         
                         <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                            <label for="email"><span>Email Address</span> <abbr class="required" title="required" aria-hidden="true">*</abbr></label>
+                            <input type="email" id="email" name="email" required placeholder="john@example.com" autocomplete="email">
                         </div>
                         
                         <div class="form-group">
@@ -391,6 +391,7 @@
                         <button type="submit" class="btn btn-primary btn-lg btn-full">
                             Send Message <i data-lucide="send"></i>
                         </button>
+                        <div id="form-status" class="form-status" aria-live="polite"></div>
                     </form>
                 </div>
             </div>

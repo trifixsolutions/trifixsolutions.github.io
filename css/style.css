@@ -46,6 +46,10 @@ html {
     scroll-behavior: smooth;
 }
 
+section[id], main[id], header[id] {
+    scroll-margin-top: 80px;
+}
+
 body {
     font-family: var(--font-secondary);
     background: var(--bg-primary);
@@ -883,6 +887,48 @@ img {
     min-height: 120px;
 }
 
+.form-group label span {
+    display: inline-flex;
+}
+
+.required {
+    color: #ef4444;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+.form-status {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-status:empty {
+    display: none;
+}
+
+.form-status.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+.form-status.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.form-status svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
 /* ========================================
    FOOTER
    ======================================== */
@@ -1120,6 +1166,15 @@ img {
 
 .animate-float {
     animation: float 3s ease-in-out infinite;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* GSAP will handle scroll animations */
