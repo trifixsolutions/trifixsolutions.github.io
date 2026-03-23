@@ -35,6 +35,36 @@
     --transition-slow: 0.5s ease;
 }
 
+/* Utility Classes */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 10px 20px;
+    border-radius: 0 0 8px 8px;
+    font-weight: 700;
+    z-index: 2000;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 /* Reset & Base */
 *, *::before, *::after {
     margin: 0;
@@ -883,6 +913,43 @@ img {
     min-height: 120px;
 }
 
+.form-group label span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.required {
+    color: #ef4444;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.form-status {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: none;
+}
+
+.form-status:not(:empty) {
+    display: block;
+}
+
+.form-status.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.form-status.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
 /* ========================================
    FOOTER
    ======================================== */
@@ -1097,6 +1164,15 @@ img {
 /* ========================================
    ANIMATIONS
    ======================================== */
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
 
 @keyframes fadeInUp {
     from {
