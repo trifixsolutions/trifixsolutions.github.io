@@ -186,19 +186,58 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Clear previous status
+            if (formStatus) {
+                formStatus.style.display = 'none';
+                formStatus.className = '';
+                formStatus.textContent = '';
+            }
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            const formData = new FormData(contactForm);
+
+            // Show loading state
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> <span>Sending...</span>';
             submitBtn.disabled = true;
+            lucide.createIcons();
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    if (formStatus) {
+                        formStatus.textContent = 'Thank you! Your message has been sent successfully. We will get back to you soon.';
+                        formStatus.className = 'success';
+                        formStatus.style.display = 'block';
+                    }
+                    contactForm.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                if (formStatus) {
+                    formStatus.textContent = 'Oops! Something went wrong. Please try calling us directly or try again later.';
+                    formStatus.className = 'error';
+                    formStatus.style.display = 'block';
+                }
+            } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
