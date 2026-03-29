@@ -54,6 +54,25 @@ body {
     overflow-x: hidden;
 }
 
+/* Skip link for accessibility */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-gradient);
+    color: var(--bg-primary);
+    padding: 10px 20px;
+    border-radius: 0 0 8px 8px;
+    font-weight: 700;
+    z-index: 2000;
+    transition: top var(--transition-medium);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 a {
     text-decoration: none;
     color: inherit;
@@ -846,6 +865,13 @@ img {
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-secondary);
+}
+
+.required {
+    color: #ef4444;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 2px;
 }
 
 .form-group input,
