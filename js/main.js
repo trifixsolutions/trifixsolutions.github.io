@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.getElementById('navLinks');
     
     navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+        const isActive = navLinks.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+
         const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
+        if (isActive) {
             icon.setAttribute('data-lucide', 'x');
         } else {
             icon.setAttribute('data-lucide', 'menu');
@@ -38,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
             const icon = navToggle.querySelector('i');
             icon.setAttribute('data-lucide', 'menu');
             lucide.createIcons();
@@ -186,19 +189,73 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            const btnSpan = submitBtn.querySelector('span');
+            const btnIcon = submitBtn.querySelector('i');
+
+            const originalText = btnSpan ? btnSpan.textContent : submitBtn.textContent;
+            const originalIcon = btnIcon ? btnIcon.getAttribute('data-lucide') : null;
+
+            // Loading state
+            if (btnSpan) btnSpan.textContent = 'Sending...';
+            if (btnIcon) {
+                btnIcon.setAttribute('data-lucide', 'loader-2');
+                btnIcon.classList.add('spin');
+            }
             submitBtn.disabled = true;
+            lucide.createIcons();
+
+            // Hide previous status
+            if (formStatus) {
+                formStatus.style.display = 'none';
+                formStatus.className = '';
+            }
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+            try {
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+                const action = contactForm.getAttribute('action').replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
+
+                const response = await fetch(action, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (formStatus) {
+                        formStatus.textContent = 'Thank you! Your message has been sent successfully.';
+                        formStatus.classList.add('success');
+                        formStatus.style.display = 'block';
+                    }
+                    contactForm.reset();
+                } else {
+                    throw new Error(result.message || 'Something went wrong. Please try again.');
+                }
+            } catch (error) {
+                if (formStatus) {
+                    formStatus.textContent = error.message || 'Error sending message. Please try again later.';
+                    formStatus.classList.add('error');
+                    formStatus.style.display = 'block';
+                }
+            } finally {
+                // Restore button
+                if (btnSpan) btnSpan.textContent = originalText;
+                if (btnIcon && originalIcon) {
+                    btnIcon.setAttribute('data-lucide', originalIcon);
+                    btnIcon.classList.remove('spin');
+                }
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
