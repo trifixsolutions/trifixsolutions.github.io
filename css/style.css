@@ -42,8 +42,31 @@
     box-sizing: border-box;
 }
 
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 20px;
+    background: var(--accent-gradient);
+    color: var(--bg-primary);
+    padding: 12px 24px;
+    border-radius: 0 0 8px 8px;
+    z-index: 2000;
+    font-weight: 700;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 html {
     scroll-behavior: smooth;
+}
+
+/* Scroll margin for anchor links to prevent fixed header overlap */
+#main-content > section,
+#main-content {
+    scroll-margin-top: 80px;
 }
 
 body {
@@ -881,6 +904,28 @@ img {
 .form-group textarea {
     resize: vertical;
     min-height: 120px;
+}
+
+#form-status {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    display: none;
+}
+
+#form-status.success {
+    display: block;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+#form-status.error {
+    display: block;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 /* ========================================
