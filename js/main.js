@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.getElementById('navLinks');
     
     navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+        const isActive = navLinks.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+
         const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
+        if (isActive) {
             icon.setAttribute('data-lucide', 'x');
         } else {
             icon.setAttribute('data-lucide', 'menu');
@@ -38,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
             const icon = navToggle.querySelector('i');
             icon.setAttribute('data-lucide', 'menu');
             lucide.createIcons();
@@ -48,13 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Manage focus after scrolling
+                target.focus();
             }
         });
     });

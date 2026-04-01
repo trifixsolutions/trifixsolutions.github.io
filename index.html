@@ -18,10 +18,12 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="/" class="logo">
                 <span class="logo-text">TRIFIX</span>
                 <span class="logo-accent">SOLUTIONS</span>
             </a>
@@ -41,14 +43,15 @@
                     WhatsApp
                 </a>
             </div>
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
                 <i data-lucide="menu"></i>
             </button>
         </div>
     </nav>
 
+    <main id="main-content" tabindex="-1">
     <!-- Hero Section -->
-    <section class="hero" id="home">
+    <section class="hero" id="home" tabindex="-1">
         <div class="hero-video-container">
             <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80">
                 <source src="https://cdn.coverr.co/videos/coverr-network-cables-in-a-server-room-5764/1080p.mp4" type="video/mp4">
@@ -100,7 +103,7 @@
     </section>
 
     <!-- Services Section -->
-    <section class="services" id="services">
+    <section class="services" id="services" tabindex="-1">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">What We Offer</span>
@@ -245,7 +248,7 @@
     </section>
 
     <!-- About Section -->
-    <section class="about" id="about">
+    <section class="about" id="about" tabindex="-1">
         <div class="container">
             <div class="about-grid">
                 <div class="about-image">
@@ -291,7 +294,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="contact" id="contact">
+    <section class="contact" id="contact" tabindex="-1">
         <div class="container">
             <div class="contact-grid">
                 <div class="contact-info">
@@ -396,13 +399,14 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="#" class="logo">
+                    <a href="/" class="logo">
                         <span class="logo-text">TRIFIX</span>
                         <span class="logo-accent">SOLUTIONS</span>
                     </a>
