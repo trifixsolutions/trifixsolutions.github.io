@@ -46,6 +46,35 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Accessibility */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--accent-gradient);
+    color: var(--bg-primary);
+    padding: 10px 20px;
+    z-index: 10000;
+    font-weight: 700;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+#home,
+#services,
+#about,
+#contact,
+#main-content {
+    scroll-margin-top: 80px;
+}
+
+[tabindex="-1"]:focus {
+    outline: none;
+}
+
 body {
     font-family: var(--font-secondary);
     background: var(--bg-primary);
