@@ -1095,6 +1095,42 @@ img {
 }
 
 /* ========================================
+   FORM STATUS & INTERACTIONS
+   ======================================== */
+
+#form-status {
+    display: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+#form-status.success {
+    display: block;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+#form-status.error {
+    display: block;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
    ANIMATIONS
    ======================================== */
 
