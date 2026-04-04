@@ -184,21 +184,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Form submission feedback
+    // Form submission feedback (AJAX)
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            const btnText = submitBtn.querySelector('span');
+            const originalText = btnText.innerText;
+
+            const updateIcon = (name, spin = false) => {
+                const icon = submitBtn.querySelector('i') || submitBtn.querySelector('svg');
+                if (icon) {
+                    icon.setAttribute('data-lucide', name);
+                    icon.classList.toggle('spin', spin);
+                    lucide.createIcons();
+                }
+            };
+
+            // Loading state
             submitBtn.disabled = true;
+            btnText.innerText = 'Sending...';
+            updateIcon('loader-2', true);
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+            formStatus.style.display = 'none';
+            formStatus.className = '';
+
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+            const action = contactForm.getAttribute('action');
+            const ajaxUrl = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+            try {
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    formStatus.innerText = 'Thank you! Your message has been sent successfully.';
+                    formStatus.classList.add('success');
+                    contactForm.reset();
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                formStatus.innerText = 'Oops! Something went wrong. Please try calling us instead.';
+                formStatus.classList.add('error');
+            } finally {
                 submitBtn.disabled = false;
-                lucide.createIcons();
-            }, 3000);
+                btnText.innerText = originalText;
+                updateIcon('send', false);
+                formStatus.style.display = 'block';
+            }
         });
     }
     
