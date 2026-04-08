@@ -186,19 +186,64 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            const originalContent = submitBtn.innerHTML;
+
+            // Loading state
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Sending...';
             submitBtn.disabled = true;
+            lucide.createIcons();
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+            // Hide previous status
+            if (formStatus) {
+                formStatus.classList.remove('success', 'error');
+            }
+
+            try {
+                const formData = new FormData(contactForm);
+                const action = contactForm.getAttribute('action');
+                // Use AJAX endpoint for FormSubmit
+                const ajaxAction = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+                const response = await fetch(ajaxAction, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    contactForm.reset();
+                    if (formStatus) {
+                        formStatus.textContent = "Thank you! Your message has been sent successfully.";
+                        formStatus.className = 'success';
+                    }
+                } else {
+                    // Error from server
+                    throw new Error(result.message || 'Submission failed');
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                if (formStatus) {
+                    formStatus.textContent = "Oops! Something went wrong. Please try again or call us directly.";
+                    formStatus.className = 'error';
+                }
+            } finally {
+                // Restore button
+                submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
