@@ -24,9 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.getElementById('navLinks');
     
     navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+        const isActive = navLinks.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', isActive);
         const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
+        if (isActive) {
             icon.setAttribute('data-lucide', 'x');
         } else {
             icon.setAttribute('data-lucide', 'menu');
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
             const icon = navToggle.querySelector('i');
             icon.setAttribute('data-lucide', 'menu');
             lucide.createIcons();
@@ -186,19 +188,55 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            const originalBtnContent = submitBtn.innerHTML;
+
+            // Update button to loading state
             submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> <span>Sending...</span>';
+            lucide.createIcons();
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+            // Reset status message
+            formStatus.className = '';
+            formStatus.textContent = '';
+
+            const formData = new FormData(contactForm);
+            const ajaxUrl = contactForm.action.replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
+
+            try {
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    formStatus.textContent = 'Message sent successfully! We will get back to you soon.';
+                    formStatus.className = 'success';
+                    contactForm.reset();
+                } else {
+                    throw new Error(result.message || 'Form submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                formStatus.textContent = 'Oops! There was a problem sending your message. Please try again.';
+                formStatus.className = 'error';
+            } finally {
+                // Restore button state
                 submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
