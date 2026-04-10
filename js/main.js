@@ -186,19 +186,60 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('form-status');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+
+            // Loading state
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> <span>Sending...</span>';
             submitBtn.disabled = true;
+            lucide.createIcons();
+
+            // Reset status
+            formStatus.className = '';
+            formStatus.innerHTML = '';
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const formData = new FormData(contactForm);
+                const action = contactForm.getAttribute('action');
+
+                if (!action) {
+                    throw new Error('Form action attribute is missing');
+                }
+
+                const ajaxUrl = action.replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
+
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    formStatus.classList.add('success');
+                    formStatus.innerHTML = 'Thank you! Your message has been sent successfully.';
+                    contactForm.reset();
+                } else {
+                    throw new Error(result.message || 'Submission failed');
+                }
+            } catch (error) {
+                formStatus.classList.add('error');
+                formStatus.innerHTML = 'Sorry, there was an error sending your message. Please try again.';
+                console.error('Form submission error:', error);
+            } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
