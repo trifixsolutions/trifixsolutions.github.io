@@ -186,19 +186,62 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('form-status');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            e.preventDefault();
+            const btnText = submitBtn.querySelector('span');
+            const btnIcon = submitBtn.querySelector('i') || submitBtn.querySelector('svg');
+
+            const originalText = btnText.textContent;
+            const originalIcon = btnIcon.getAttribute('data-lucide');
+
+            // Loading state
+            btnText.textContent = 'Sending...';
+            btnIcon.setAttribute('data-lucide', 'loader-2');
+            btnIcon.classList.add('spin');
             submitBtn.disabled = true;
+            lucide.createIcons();
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+            // Reset status
+            formStatus.className = '';
+            formStatus.textContent = '';
+
+            try {
+                const formData = new FormData(contactForm);
+                const action = contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+                const response = await fetch(action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    formStatus.textContent = 'Message sent successfully! We will get back to you soon.';
+                    formStatus.classList.add('success');
+                    contactForm.reset();
+                } else {
+                    throw new Error(data.message || 'Something went wrong. Please try again.');
+                }
+            } catch (error) {
+                formStatus.textContent = error.message;
+                formStatus.classList.add('error');
+            } finally {
+                btnText.textContent = originalText;
+                // Re-query icon because lucide replaces the element
+                const currentIcon = submitBtn.querySelector('i') || submitBtn.querySelector('svg');
+                currentIcon.setAttribute('data-lucide', originalIcon);
+                currentIcon.classList.remove('spin');
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
