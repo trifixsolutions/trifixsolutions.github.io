@@ -187,19 +187,85 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
-            submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+        const formContainer = contactForm.parentElement;
+        const originalFormHTML = formContainer.innerHTML;
+
+        // Use delegation for the reset button since we'll replace the innerHTML
+        formContainer.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'resetForm') {
+                e.preventDefault();
+                formContainer.innerHTML = originalFormHTML;
                 lucide.createIcons();
-            }, 3000);
+                // We need to re-bind the submit listener or use delegation
+                // Re-initializing the whole block is cleaner if we move the logic into a function
+                initContactForm();
+            }
         });
+
+        function initContactForm() {
+            const currentForm = document.getElementById('contactForm');
+            if (!currentForm) return;
+
+            currentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const submitBtn = currentForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                // Remove existing error message if any
+                const existingError = currentForm.querySelector('.error-feedback');
+                if (existingError) existingError.remove();
+
+                submitBtn.innerHTML = '<span>Sending...</span>';
+                submitBtn.disabled = true;
+
+                try {
+                    const formData = new FormData(currentForm);
+                    const response = await fetch(currentForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        formContainer.innerHTML = `
+                            <div class="success-message" style="text-align: center; padding: 30px 0;">
+                                <div style="display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: rgba(37, 211, 102, 0.1); border-radius: 20px; margin-bottom: 30px;">
+                                    <i data-lucide="check-circle" style="color: #25d366; width: 40px; height: 40px;"></i>
+                                </div>
+                                <h2 style="font-family: var(--font-primary); font-size: 2.25rem; font-weight: 800; margin-bottom: 15px; color: var(--text-primary);">Message Sent!</h2>
+                                <p style="color: var(--text-secondary); margin: 0 auto 35px; max-width: 380px; font-size: 1.1rem; line-height: 1.6;">
+                                    Thank you for reaching out. We've received your inquiry and will get back to you within 24 hours.
+                                </p>
+                                <button id="resetForm" class="btn btn-outline btn-sm">
+                                    <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+                                    Send Another Message
+                                </button>
+                            </div>
+                        `;
+                        lucide.createIcons();
+                    } else {
+                        throw new Error('Form submission failed');
+                    }
+                } catch (error) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    lucide.createIcons();
+
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'error-feedback';
+                    errorMsg.style.color = '#ef4444';
+                    errorMsg.style.marginTop = '15px';
+                    errorMsg.style.fontSize = '0.875rem';
+                    errorMsg.textContent = 'Something went wrong. Please try again or call us directly.';
+                    currentForm.appendChild(errorMsg);
+                }
+            });
+        }
+
+        initContactForm();
     }
     
     // Parallax effect on hero
