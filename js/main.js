@@ -186,19 +186,67 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    contactForm.style.display = 'none';
+                    formStatus.innerHTML = `
+                        <div style="text-align: center; padding: 40px 0;" tabindex="-1" id="successMessage">
+                            <div style="width: 64px; height: 64px; background: rgba(0, 212, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                <i data-lucide="check-circle" style="color: var(--accent-primary); width: 32px; height: 32px;"></i>
+                            </div>
+                            <h3 style="font-family: var(--font-primary); font-size: 1.5rem; margin-bottom: 10px;">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px;">Thank you for your inquiry. We'll get back to you soon.</p>
+                            <button type="button" id="sendAnother" class="btn btn-outline" style="margin: 0 auto;">Send Another</button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    document.getElementById('successMessage').focus();
+
+                    document.getElementById('sendAnother').addEventListener('click', () => {
+                        contactForm.reset();
+                        contactForm.style.display = 'flex';
+                        formStatus.innerHTML = '';
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        lucide.createIcons();
+                        setTimeout(() => {
+                            contactForm.querySelector('input').focus();
+                        }, 0);
+                    });
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                formStatus.innerHTML = `
+                    <div style="padding: 15px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 10px; color: #ef4444; margin-bottom: 20px; font-size: 0.875rem; display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+                        <span>Something went wrong. Please try again.</span>
+                    </div>
+                `;
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
