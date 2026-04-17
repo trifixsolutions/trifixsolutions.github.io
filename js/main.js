@@ -186,20 +186,95 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const contactSuccess = document.getElementById('contactSuccess');
+
+    if (contactForm && contactSuccess) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+
+            // Loading state
+            submitBtn.innerHTML = '<span class="loading-spinner"><i data-lucide="loader-2" class="animate-spin"></i> Sending...</span>';
             submitBtn.disabled = true;
+            lucide.createIcons();
+
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const response = await fetch('https://formsubmit.co/ajax/trifixsolutions@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success transition
+                    gsap.to(contactForm, {
+                        opacity: 0,
+                        y: -20,
+                        duration: 0.4,
+                        onComplete: () => {
+                            contactForm.style.display = 'none';
+                            contactSuccess.style.display = 'block';
+                            gsap.fromTo(contactSuccess,
+                                { opacity: 0, y: 20 },
+                                { opacity: 1, y: 0, duration: 0.4 }
+                            );
+                            contactSuccess.focus();
+                        }
+                    });
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Sorry, there was an error sending your message. Please try again or contact us directly.');
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
+
+        // Handle "Send Another" button
+        const sendAnotherBtn = document.getElementById('sendAnother');
+        if (sendAnotherBtn) {
+            sendAnotherBtn.addEventListener('click', () => {
+                gsap.to(contactSuccess, {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.4,
+                    onComplete: () => {
+                        contactSuccess.style.display = 'none';
+                        contactForm.reset();
+
+                        // Reset submit button state
+                        const submitBtn = contactForm.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.innerHTML = 'Send Message <i data-lucide="send"></i>';
+                            submitBtn.disabled = false;
+                            lucide.createIcons();
+                        }
+
+                        contactForm.style.display = 'flex';
+                        gsap.fromTo(contactForm,
+                            { opacity: 0, y: -20 },
+                            { opacity: 1, y: 0, duration: 0.4 }
+                        );
+                        // Focus the first input
+                        setTimeout(() => {
+                            const firstInput = contactForm.querySelector('input:not([type="hidden"])');
+                            if (firstInput) firstInput.focus();
+                        }, 100);
+                    }
+                });
+            });
+        }
     }
     
     // Parallax effect on hero
