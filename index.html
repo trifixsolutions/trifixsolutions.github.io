@@ -350,17 +350,17 @@
                         
                         <div class="form-group">
                             <label for="name">Your Name</label>
-                            <input type="text" id="name" name="name" required placeholder="John Doe">
+                            <input type="text" id="name" name="name" required placeholder="John Doe" autocomplete="name">
                         </div>
                         
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                            <input type="email" id="email" name="email" required placeholder="john@example.com" autocomplete="email">
                         </div>
                         
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+254 7XX XXX XXX">
+                            <input type="tel" id="phone" name="phone" placeholder="+254 7XX XXX XXX" autocomplete="tel">
                         </div>
                         
                         <div class="form-group">
@@ -392,6 +392,19 @@
                             Send Message <i data-lucide="send"></i>
                         </button>
                     </form>
+
+                    <div id="contactSuccess" class="contact-success" aria-live="polite" tabindex="-1">
+                        <div class="success-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <h3 class="success-title">Message Sent!</h3>
+                        <p class="success-text">
+                            Thank you for reaching out. We've received your inquiry and will get back to you within 24 hours.
+                        </p>
+                        <button type="button" id="sendAnother" class="btn btn-outline btn-sm">
+                            Send Another Message
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
