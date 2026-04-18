@@ -186,19 +186,65 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+            const originalBtnContent = submitBtn.innerHTML;
+
+            // Loading state
             submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner animate-spin"></span> <span>Sending...</span>';
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success
+                    contactForm.style.display = 'none';
+                    formStatus.style.display = 'block';
+                    formStatus.className = 'form-status status-success';
+                    formStatus.innerHTML = `
+                        <div class="status-icon"><i data-lucide="check-circle"></i></div>
+                        <span class="status-title">Message Sent!</span>
+                        <p>Thank you for reaching out. We've received your message and will get back to you within 24 hours.</p>
+                        <button class="btn btn-outline btn-sm" style="margin-top: 20px;" onclick="location.reload()">Send Another</button>
+                    `;
+                    lucide.createIcons();
+                    formStatus.focus();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                // Error
+                formStatus.style.display = 'block';
+                formStatus.className = 'form-status status-error';
+                formStatus.innerHTML = `
+                    <div class="status-icon"><i data-lucide="alert-circle"></i></div>
+                    <span class="status-title">Oops! Something went wrong.</span>
+                    <p>We couldn't send your message. Please try again or contact us directly via email.</p>
+                `;
                 lucide.createIcons();
-            }, 3000);
+
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
+                lucide.createIcons();
+                formStatus.focus();
+            }
         });
     }
     
