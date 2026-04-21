@@ -24,7 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.getElementById('navLinks');
     
     navToggle.addEventListener('click', () => {
+        const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !isExpanded);
         navLinks.classList.toggle('active');
+
         const icon = navToggle.querySelector('i');
         if (navLinks.classList.contains('active')) {
             icon.setAttribute('data-lucide', 'x');
@@ -38,23 +41,43 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
             const icon = navToggle.querySelector('i');
             icon.setAttribute('data-lucide', 'menu');
             lucide.createIcons();
         });
+    });
+
+    // Close mobile menu on Esc key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            const icon = navToggle.querySelector('i');
+            icon.setAttribute('data-lucide', 'menu');
+            lucide.createIcons();
+            navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Focus management
+                if (targetId !== '#') {
+                    target.setAttribute('tabindex', '-1');
+                    target.focus({ preventScroll: true });
+                }
             }
         });
     });
