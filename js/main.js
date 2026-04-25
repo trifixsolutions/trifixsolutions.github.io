@@ -184,21 +184,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Form submission feedback
+    // Form submission feedback (AJAX)
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Show loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const response = await fetch(contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Show success message
+                    const container = contactForm.parentElement;
+                    container.innerHTML = `
+                        <div class="success-message" role="status" aria-live="polite" tabindex="-1" style="text-align: center; padding: 40px 0;">
+                            <div class="service-icon" style="margin: 0 auto 24px; background: rgba(34, 197, 94, 0.15); width: 80px; height: 80px;">
+                                <i data-lucide="check-circle" style="color: #22c55e; width: 40px; height: 40px;"></i>
+                            </div>
+                            <h2 style="margin-bottom: 16px; font-family: var(--font-primary);">Message Sent!</h2>
+                            <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 1.1rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+                                Thank you for reaching out. We've received your inquiry and our team will get back to you within 24 hours.
+                            </p>
+                            <button onclick="location.reload()" class="btn btn-primary btn-lg">
+                                Send Another Message
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    container.querySelector('.success-message').focus();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
+                alert('Sorry, there was an error sending your message. Please try again or contact us via WhatsApp.');
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
