@@ -1,3 +1,7 @@
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
+
+## 2026-05-01 - [Robust Mobile Navigation & Focus Management]
+**Learning:** The mobile navigation menu is a critical interactive touchpoint. Implementing 'aria-expanded' and 'aria-controls' on the toggle button, adding 'Escape' key support for closing overlays, and managing focus (returning focus to the toggle button) significantly improves accessibility for keyboard and screen reader users. Additionally, locking the background scroll ('overflow: hidden') when the menu is open prevents user disorientation.
+**Action:** When building overlays or mobile menus, always manage ARIA state, handle the 'Escape' key, and return focus to the trigger element on close. Centralizing state management in a 'setMenuState' function ensures consistent behavior across different interaction points (clicks, keypresses, link navigations).
