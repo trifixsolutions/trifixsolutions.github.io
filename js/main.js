@@ -186,19 +186,86 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span>';
+
+            // Loading state
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> <span>Sending...</span>';
             submitBtn.disabled = true;
+            lucide.createIcons();
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            // Clear previous status
+            formStatus.style.display = 'none';
+            formStatus.innerHTML = '';
+
+            try {
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+
+                // Use FormSubmit AJAX endpoint
+                const ajaxUrl = contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success state
+                    contactForm.style.display = 'none';
+                    formStatus.style.display = 'block';
+                    formStatus.style.textAlign = 'center';
+                    formStatus.style.padding = '40px 20px';
+
+                    formStatus.innerHTML = `
+                        <div class="success-content" style="animation: fadeInUp 0.6s ease forwards;">
+                            <div style="width: 60px; height: 60px; background: rgba(34, 197, 94, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                <i data-lucide="check" style="color: #22c55e; width: 30px; height: 30px;"></i>
+                            </div>
+                            <h3 style="margin-bottom: 10px; font-family: var(--font-primary);">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px;">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                            <button type="button" class="btn btn-outline" onclick="location.reload()">
+                                <i data-lucide="refresh-cw"></i> Send Another Message
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+
+                    // Focus for screen readers
+                    setTimeout(() => {
+                        formStatus.focus();
+                    }, 100);
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                // Error state
+                formStatus.style.display = 'block';
+                formStatus.style.color = '#ef4444';
+                formStatus.style.marginTop = '20px';
+                formStatus.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
+                        <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+                        <span>Something went wrong. Please try again or contact us directly.</span>
+                    </div>
+                `;
+                lucide.createIcons();
+
+                // Reset button
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
