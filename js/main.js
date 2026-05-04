@@ -186,19 +186,55 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const contactSuccess = document.getElementById('contactSuccess');
+    const contactError = document.getElementById('contactError');
+
+    if (contactForm && contactSuccess) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('https://formsubmit.co/ajax/trifixsolutions@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success
+                    contactForm.style.display = 'none';
+                    contactSuccess.style.display = 'block';
+                    contactSuccess.focus();
+                    lucide.createIcons();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                if (contactError) {
+                    contactError.style.display = 'block';
+                } else {
+                    alert('Oops! There was a problem submitting your form. Please try again or contact us directly.');
+                }
+
+                // Reset button
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
