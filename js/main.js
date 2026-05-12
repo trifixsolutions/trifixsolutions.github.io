@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     navToggle.addEventListener('click', () => {
         navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
+        const icon = navToggle.querySelector('[data-lucide]');
         if (navLinks.classList.contains('active')) {
             icon.setAttribute('data-lucide', 'x');
         } else {
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
+            const icon = navToggle.querySelector('[data-lucide]');
             icon.setAttribute('data-lucide', 'menu');
             lucide.createIcons();
         });
@@ -184,21 +184,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Form submission feedback
+    // Form submission feedback with AJAX
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+            const formContainer = document.querySelector('.contact-form-container');
+
+            // Set loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+            try {
+                const formData = new FormData(contactForm);
+                const action = contactForm.getAttribute('action');
+                const ajaxUrl = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (response.ok) {
+                    // Success state
+                    formContainer.innerHTML = `
+                        <div class="success-message" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center;" aria-live="polite" tabindex="-1">
+                            <div class="service-icon" style="width: 80px; height: 80px; margin-bottom: 25px;">
+                                <i data-lucide="check-circle-2" style="width: 40px; height: 40px;"></i>
+                            </div>
+                            <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 15px;">Message Sent Successfully!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px; max-width: 300px;">
+                                Thank you for reaching out. Our team will get back to you within 24 hours.
+                            </p>
+                            <button onclick="location.reload()" class="btn btn-outline">
+                                <i data-lucide="refresh-cw"></i> Send Another Message
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    formContainer.querySelector('.success-message').focus();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                submitBtn.innerHTML = `<span>Error! Try Again</span> <i data-lucide="alert-circle"></i>`;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    lucide.createIcons();
+                }, 3000);
+            }
         });
     }
     
