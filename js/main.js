@@ -184,22 +184,91 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Form submission feedback
+    // Form submission handler with AJAX
+    const contactFormContainer = document.querySelector('.contact-form-container');
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
+
+    function initContactForm() {
+        const form = document.getElementById('contactForm');
+        if (!form) return;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnContent = submitBtn.innerHTML;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Transform URL for FormSubmit AJAX
+            const action = form.getAttribute('action');
+            if (!action) return;
+            const ajaxUrl = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+
+            try {
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success state
+                    contactFormContainer.innerHTML = `
+                        <div class="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center;" tabindex="-1">
+                            <div class="service-icon" style="width: 80px; height: 80px; margin-bottom: 24px; flex-shrink: 0;">
+                                <i data-lucide="check-circle-2" style="width: 40px; height: 40px;"></i>
+                            </div>
+                            <h3 class="section-title" style="margin-bottom: 16px; font-size: 2.25rem;">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 32px; max-width: 380px; font-size: 1.1rem; line-height: 1.6;">
+                                Thank you for reaching out. We've received your inquiry and will get back to you within 24 hours.
+                            </p>
+                            <button id="sendAnother" class="btn btn-primary btn-lg">Send Another Message</button>
+                        </div>
+                    `;
+
+                    lucide.createIcons();
+                    const statusContainer = contactFormContainer.querySelector('.status-container');
+                    statusContainer.focus();
+
+                    document.getElementById('sendAnother').addEventListener('click', () => {
+                        location.reload(); // Simplest way to restore the form state and GSAP triggers
+                    });
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+
+                // Error state - provide feedback and restore button
+                let errorMsg = form.querySelector('.form-error-msg');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('p');
+                    errorMsg.className = 'form-error-msg';
+                    errorMsg.style.color = '#ef4444';
+                    errorMsg.style.fontSize = '0.875rem';
+                    errorMsg.style.marginTop = '10px';
+                    errorMsg.setAttribute('aria-live', 'polite');
+                    form.appendChild(errorMsg);
+                }
+                errorMsg.textContent = 'Something went wrong. Please try again or contact us directly.';
+
+                submitBtn.innerHTML = originalBtnContent;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
+    }
+
+    if (contactForm) {
+        initContactForm();
     }
     
     // Parallax effect on hero
