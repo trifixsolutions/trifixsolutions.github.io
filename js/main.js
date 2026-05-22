@@ -184,21 +184,65 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Form submission feedback
+    // Form submission feedback with AJAX
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+            const container = document.querySelector('.contact-form-container');
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+
+            try {
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+
+                const response = await fetch('https://formsubmit.co/ajax/trifixsolutions@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    container.innerHTML = `
+                        <div class="success-message" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 400px;" tabindex="-1">
+                            <div class="service-icon" style="margin-bottom: 20px; background: rgba(34, 197, 94, 0.1); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="check-circle" style="color: #22c55e; width: 28px; height: 28px;"></i>
+                            </div>
+                            <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 15px; color: var(--text-primary);">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 25px; max-width: 300px;">Thank you for reaching out. We've received your message and will get back to you within 24 hours.</p>
+                            <button class="btn btn-outline" onclick="location.reload()">Send Another Message</button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    container.querySelector('.success-message').focus();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                const errorMsg = document.createElement('p');
+                errorMsg.className = 'error-feedback';
+                errorMsg.style.color = '#ef4444';
+                errorMsg.style.marginTop = '15px';
+                errorMsg.style.fontSize = '0.875rem';
+                errorMsg.textContent = 'Something went wrong. Please try again or call us directly.';
+
+                if (!contactForm.querySelector('.error-feedback')) {
+                    contactForm.appendChild(errorMsg);
+                }
+
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
