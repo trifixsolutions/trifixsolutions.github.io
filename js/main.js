@@ -187,18 +187,56 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
+
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const response = await fetch('https://formsubmit.co/ajax/trifixsolutions@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success state: replace form content with message
+                    contactForm.innerHTML = `
+                        <div class="success-message" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 0; min-height: 400px;" aria-live="polite" tabindex="-1">
+                            <div class="service-icon" style="margin-bottom: 24px; background: rgba(0, 212, 255, 0.1); border-radius: 12px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="check-circle-2" style="width: 28px; height: 28px; color: var(--accent-primary);"></i>
+                            </div>
+                            <h3 style="font-family: var(--font-primary); font-size: 1.75rem; font-weight: 800; margin-bottom: 12px; color: var(--text-primary);">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px; max-width: 300px;">Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+                            <button onclick="location.reload()" class="btn btn-primary btn-lg">
+                                Send Another Message
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    setTimeout(() => {
+                        const successMsg = contactForm.querySelector('.success-message');
+                        if (successMsg) successMsg.focus();
+                    }, 100);
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+                alert('Sorry, there was an error sending your message. Please try again.');
+            }
         });
     }
     
