@@ -1,3 +1,7 @@
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
+
+## 2026-03-21 - [Navigation Focus Management & ARIA States]
+**Learning:** In single-page applications with smooth scrolling, simply moving the viewport is insufficient for keyboard and screen-reader users; programmatic focus must follow to the target element (requiring `tabindex="-1"` for non-interactive elements). Additionally, mobile menus require a synchronized state of `aria-expanded`, body scroll locking, and explicit focus restoration to the trigger when closed via the Escape key.
+**Action:** Always pair smooth-scroll logic with `.focus()` on the target. Ensure mobile menus manage ARIA states, prevent background scrolling, and return focus to the toggle button upon closing. Use robust selectors (e.g., `i, svg[data-lucide]`) when updating Lucide icons dynamically to account for SVG replacement.

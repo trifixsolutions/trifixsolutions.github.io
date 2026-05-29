@@ -23,25 +23,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+    const toggleMenu = (isOpen) => {
+        // Find the icon: it might be an <i> (initial) or <svg> (after Lucide replaces it)
+        const icon = navToggle.querySelector('i, svg[data-lucide]');
+        if (isOpen) {
+            navLinks.classList.add('active');
+            navToggle.setAttribute('aria-expanded', 'true');
+            navToggle.setAttribute('aria-label', 'Close menu');
+            if (icon) icon.setAttribute('data-lucide', 'x');
+            document.body.style.overflow = 'hidden';
         } else {
-            icon.setAttribute('data-lucide', 'menu');
+            navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', 'Open menu');
+            if (icon) icon.setAttribute('data-lucide', 'menu');
+            document.body.style.overflow = '';
+
+            // Return focus to toggle if focus was inside the menu
+            if (navLinks.contains(document.activeElement)) {
+                navToggle.focus();
+            }
         }
         lucide.createIcons();
+    };
+
+    navToggle.addEventListener('click', () => {
+        const isOpening = !navLinks.classList.contains('active');
+        toggleMenu(isOpening);
     });
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+            toggleMenu(false);
         });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
@@ -55,6 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Focus the target section to improve keyboard navigation
+                target.focus({ preventScroll: true });
+
+                // If focus fails (e.g. target is not focusable),
+                // it might be because we didn't add tabindex="-1" to all potential targets.
+                // But we did add it to the main sections.
             }
         });
     });
