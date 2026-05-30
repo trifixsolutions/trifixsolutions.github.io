@@ -47,14 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                history.pushState(null, null, targetId);
+                target.focus({ preventScroll: true });
             }
         });
     });
@@ -187,18 +188,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
+            const originalBtnText = submitBtn.innerHTML;
+            const container = contactForm.parentElement;
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+
+            try {
+                const formData = new FormData(contactForm);
+                const response = await fetch(contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (response.ok) {
+                    container.setAttribute('aria-live', 'polite');
+                    container.style.minHeight = container.offsetHeight + 'px';
+                    container.innerHTML = `
+                        <div class="success-message" tabindex="-1" style="text-align: center; padding: 40px 0; outline: none;">
+                            <div class="service-icon" style="margin: 0 auto 20px;"><i data-lucide="check-circle-2"></i></div>
+                            <h3 class="section-title">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px;">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                            <button class="btn btn-outline" onclick="location.reload()">Send Another Message</button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    container.querySelector('.success-message').focus();
+                } else {
+                    throw new Error();
+                }
+            } catch (err) {
+                submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
-                lucide.createIcons();
-            }, 3000);
+                alert('Oops! Something went wrong. Please try again.');
+            }
         });
     }
     
