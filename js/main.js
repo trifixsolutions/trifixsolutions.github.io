@@ -188,17 +188,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+            const action = contactForm.getAttribute('action');
+            const ajaxAction = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+            fetch(ajaxAction, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    const formContainer = contactForm.parentElement;
+                    formContainer.innerHTML = `
+                        <div class="success-message" style="text-align: center; padding: 40px 20px; outline: none;" tabindex="-1" aria-live="polite">
+                            <div class="service-icon" style="margin: 0 auto 20px; background: rgba(34, 197, 94, 0.1);">
+                                <i data-lucide="check-circle" style="color: #22c55e;"></i>
+                            </div>
+                            <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 10px;">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px;">Thank you for reaching out. We've received your message and will get back to you within 24 hours.</p>
+                            <button onclick="location.reload()" class="btn btn-outline btn-sm">
+                                <i data-lucide="refresh-cw"></i> Send Another Message
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    setTimeout(() => {
+                        formContainer.querySelector('.success-message').focus();
+                    }, 100);
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
+
+                // Show error message
+                let errorMsg = contactForm.querySelector('.form-error');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('p');
+                    errorMsg.className = 'form-error';
+                    errorMsg.style.cssText = 'color: #ef4444; font-size: 0.875rem; margin-top: 15px; text-align: center;';
+                    errorMsg.setAttribute('aria-live', 'polite');
+                    contactForm.appendChild(errorMsg);
+                }
+                errorMsg.textContent = 'Sorry, there was a problem sending your message. Please try again or call us directly.';
                 lucide.createIcons();
-            }, 3000);
+            });
         });
     }
     
