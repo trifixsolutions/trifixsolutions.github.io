@@ -187,18 +187,63 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const formStatus = document.getElementById('formStatus');
             const originalText = submitBtn.innerHTML;
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
+            formStatus.innerHTML = '';
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const formData = new FormData(contactForm);
+                const action = contactForm.getAttribute('action');
+                const ajaxUrl = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+                const response = await fetch(ajaxUrl, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    formStatus.innerHTML = `
+                        <div class="channel-item" style="margin-top: 20px; border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.1); opacity: 1;">
+                            <div class="channel-icon" style="background: rgba(34, 197, 94, 0.1);">
+                                <i data-lucide="check-circle" style="color: #22c55e;" aria-hidden="true"></i>
+                            </div>
+                            <div class="channel-details">
+                                <span class="channel-label" style="color: #4ade80;">Success</span>
+                                <span class="channel-value">Message sent! We'll get back to you soon.</span>
+                            </div>
+                        </div>
+                    `;
+                    contactForm.reset();
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                formStatus.innerHTML = `
+                    <div class="channel-item" style="margin-top: 20px; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); opacity: 1;">
+                        <div class="channel-icon" style="background: rgba(239, 68, 68, 0.1);">
+                            <i data-lucide="alert-circle" style="color: #ef4444;" aria-hidden="true"></i>
+                        </div>
+                        <div class="channel-details">
+                            <span class="channel-label" style="color: #f87171;">Error</span>
+                            <span class="channel-value">Oops! Something went wrong. Please try again.</span>
+                        </div>
+                    </div>
+                `;
+            } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
