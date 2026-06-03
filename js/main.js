@@ -186,19 +186,53 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('formStatus');
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            formStatus.innerHTML = '';
+
+            try {
+                const formData = new FormData(contactForm);
+                const action = contactForm.getAttribute('action');
+                const ajaxUrl = action ? action.replace('formsubmit.co/', 'formsubmit.co/ajax/') : '';
+
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (!response.ok) throw new Error();
+
+                contactForm.innerHTML = `
+                    <div id="successMessage" tabindex="-1" style="text-align: center; padding: 40px 20px; outline: none;">
+                        <div class="service-icon" style="margin: 0 auto 20px;"><i data-lucide="check-circle-2"></i></div>
+                        <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 10px;">Message Sent!</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 30px;">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                        <button onclick="location.reload()" class="btn btn-outline btn-sm">Send Another</button>
+                    </div>
+                `;
+                lucide.createIcons();
+                const successMsg = document.getElementById('successMessage');
+                successMsg.focus();
+                successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch (err) {
+                formStatus.innerHTML = `
+                    <div style="padding: 15px; background: rgba(239, 68, 68, 0.1); border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; font-size: 0.875rem;">
+                        Oops! Something went wrong. Please try again or call us directly.
+                    </div>
+                `;
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
