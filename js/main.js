@@ -186,19 +186,65 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            formStatus.innerHTML = '';
+
+            try {
+                const formData = new FormData(contactForm);
+                const response = await fetch('https://formsubmit.co/ajax/trifixsolutions@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (response.ok) {
+                    // Success state: replace form with success message
+                    const container = contactForm.parentElement;
+                    container.innerHTML = `
+                        <div class="success-message" tabindex="-1" style="text-align: center; padding: 20px 0; outline: none;">
+                            <div class="service-icon" style="margin: 0 auto 20px; background: rgba(34, 197, 94, 0.1);">
+                                <i data-lucide="check-circle" style="color: #4ade80;"></i>
+                            </div>
+                            <h2 class="section-title">Message Sent!</h2>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px;">
+                                Thank you for reaching out. We've received your message and will get back to you within 24 hours.
+                            </p>
+                            <button onclick="location.reload()" class="btn btn-primary">
+                                Send Another Message
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    container.querySelector('.success-message').focus();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                formStatus.innerHTML = `
+                    <div style="padding: 15px; background: rgba(239, 68, 68, 0.1); border-radius: 10px; margin-bottom: 20px; color: #f87171; text-align: center; font-size: 0.875rem;">
+                        <i data-lucide="alert-circle" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;"></i>
+                        Something went wrong. Please try again or contact us directly.
+                    </div>
+                `;
+                lucide.createIcons();
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-                lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
