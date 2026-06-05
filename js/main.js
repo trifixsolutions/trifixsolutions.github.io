@@ -186,19 +186,78 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
+            const originalBtnContent = submitBtn.innerHTML;
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Clear previous status
+            formStatus.innerHTML = '';
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
+            try {
+                const action = contactForm.getAttribute('action');
+                const ajaxUrl = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success View
+                    contactForm.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; gap: 24px;">
+                            <div class="service-icon" style="margin: 0; width: 80px; height: 80px;">
+                                <i data-lucide="check-circle-2" style="width: 40px; height: 40px;"></i>
+                            </div>
+                            <h2 class="section-title" style="margin: 0;">Message Sent!</h2>
+                            <p style="color: var(--text-secondary); max-width: 400px; margin: 0;">
+                                Thank you for reaching out. Our team has received your message and will get back to you within 24 hours.
+                            </p>
+                            <button onclick="location.reload()" class="btn btn-outline" style="margin-top: 10px;">
+                                Send Another Message
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+
+                    // Scroll to success message and focus for screen readers
+                    contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    contactForm.setAttribute('tabindex', '-1');
+                    contactForm.style.outline = 'none';
+                    contactForm.focus();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                formStatus.innerHTML = `
+                    <div style="padding: 15px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; color: #f87171; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="alert-circle" style="width: 18px; height: 18px; flex-shrink: 0;"></i>
+                        <span>Sorry, something went wrong. Please try again or call us directly.</span>
+                    </div>
+                `;
+                lucide.createIcons();
+
+                // Reset button
+                submitBtn.innerHTML = originalBtnContent;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
