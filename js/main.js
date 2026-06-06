@@ -186,17 +186,27 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('formStatus');
+
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
+            if (formStatus) {
+                formStatus.textContent = 'Sending message...';
+            }
+
             // Re-enable after timeout (form will submit to formsubmit.co)
             setTimeout(() => {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
+                if (formStatus) {
+                    formStatus.textContent = '';
+                }
                 lucide.createIcons();
             }, 3000);
         });
