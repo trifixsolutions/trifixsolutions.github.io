@@ -186,19 +186,60 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
+            // Change button state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
+            formStatus.innerHTML = '';
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+
+                // Get action URL and append ajax/ for FormSubmit AJAX API
+                let action = contactForm.getAttribute('action');
+                if (action && action.includes('formsubmit.co/') && !action.includes('formsubmit.co/ajax/')) {
+                    action = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+                }
+
+                const response = await fetch(action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    formStatus.style.color = '#25d366';
+                    formStatus.innerHTML = '<div style="background: rgba(37, 211, 102, 0.1); padding: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;"><i data-lucide="check-circle-2"></i> Message sent successfully!</div>';
+                    contactForm.reset();
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    // Focus the status message for screen readers
+                    formStatus.setAttribute('tabindex', '-1');
+                    formStatus.focus();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                formStatus.style.color = '#ef4444';
+                formStatus.innerHTML = '<div style="background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;"><i data-lucide="alert-circle"></i> Failed to send. Please try again.</div>';
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
+            } finally {
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
