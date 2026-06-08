@@ -186,19 +186,62 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
+            // Set loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
+            formStatus.innerHTML = '';
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('https://formsubmit.co/ajax/trifixsolutions@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success === 'true' || response.ok) {
+                    formStatus.innerHTML = `
+                        <div style="background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.3); color: #25d366; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="check-circle" aria-hidden="true"></i>
+                            <span>Message sent successfully! We'll get back to you soon.</span>
+                        </div>
+                    `;
+                    contactForm.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                formStatus.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="alert-circle" aria-hidden="true"></i>
+                        <span>Oops! Something went wrong. Please try calling us instead.</span>
+                    </div>
+                `;
+            } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+
+                // Focus the status message for screen readers
+                formStatus.setAttribute('tabindex', '-1');
+                formStatus.focus();
+            }
         });
     }
     
