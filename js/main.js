@@ -186,19 +186,75 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            formStatus.style.display = 'none';
+            formStatus.innerHTML = '';
+
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+            const action = contactForm.getAttribute('action');
+            const ajaxUrl = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+            try {
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    formStatus.style.display = 'flex';
+                    formStatus.style.alignItems = 'center';
+                    formStatus.style.gap = '12px';
+                    formStatus.style.padding = '15px 20px';
+                    formStatus.style.background = 'rgba(37, 211, 102, 0.1)';
+                    formStatus.style.color = '#25d366';
+                    formStatus.innerHTML = `
+                        <i data-lucide="check-circle" aria-hidden="true"></i>
+                        <span style="font-weight: 500;">Message sent successfully! We'll get back to you soon.</span>
+                    `;
+                    contactForm.reset();
+                } else {
+                    throw new Error(result.message || 'Something went wrong. Please try again.');
+                }
+            } catch (error) {
+                // Error
+                formStatus.style.display = 'flex';
+                formStatus.style.alignItems = 'center';
+                formStatus.style.gap = '12px';
+                formStatus.style.padding = '15px 20px';
+                formStatus.style.background = 'rgba(239, 68, 68, 0.1)';
+                formStatus.style.color = '#ef4444';
+                formStatus.innerHTML = `
+                    <i data-lucide="alert-circle" aria-hidden="true"></i>
+                    <span style="font-weight: 500;">${error.message}</span>
+                `;
+            } finally {
+                // Restore button and update icons
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+
+                // Focus status for screen readers
+                formStatus.focus();
+            }
         });
     }
     
