@@ -186,19 +186,39 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const formStatus = document.getElementById('formStatus');
+
+    if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            formStatus.style.display = 'none';
+
+            try {
+                const response = await fetch(contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(new FormData(contactForm)))
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Submission failed');
+
+                formStatus.innerHTML = `<div style="background:rgba(37,211,102,0.1);border:1px solid #25d366;color:#25d366;padding:15px;border-radius:10px;display:flex;align-items:center;gap:10px;"><i data-lucide="check-circle" aria-hidden="true"></i><span>Thank you! Your message has been sent.</span></div>`;
+                contactForm.reset();
+            } catch (error) {
+                formStatus.innerHTML = `<div style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;color:#ef4444;padding:15px;border-radius:10px;display:flex;align-items:center;gap:10px;"><i data-lucide="alert-circle" aria-hidden="true"></i><span id="errorMsg"></span></div>`;
+                formStatus.querySelector('#errorMsg').textContent = error.message;
+            } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
+                formStatus.style.display = 'block';
                 lucide.createIcons();
-            }, 3000);
+                formStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         });
     }
     
