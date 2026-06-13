@@ -22,26 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile menu toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+
+    const toggleMenu = (forceClose = false) => {
+        const isOpen = forceClose ? false : !navLinks.classList.contains('active');
+        navLinks.classList.toggle('active', isOpen);
+
+        // Update ARIA attributes
+        navToggle.setAttribute('aria-expanded', isOpen);
+        navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+
+        // Update Icon
+        const icon = navToggle.querySelector('[data-lucide]');
+        if (icon) {
+            icon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
+            lucide.createIcons();
         }
-        lucide.createIcons();
-    });
+    };
+
+    navToggle.addEventListener('click', () => toggleMenu());
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
-        });
+        link.addEventListener('click', () => toggleMenu(true));
     });
     
     // Smooth scroll for anchor links
@@ -184,21 +186,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Form submission feedback
+    // Form submission feedback (AJAX)
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+            const formData = new FormData(contactForm);
+            const formAction = contactForm.getAttribute('action');
+            const ajaxAction = formAction.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            try {
+                const response = await fetch(ajaxAction, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (response.ok) {
+                    const container = contactForm.parentElement;
+                    container.style.transition = 'opacity 0.3s ease';
+                    container.style.opacity = '0';
+
+                    setTimeout(() => {
+                        container.innerHTML = `
+                            <div class="success-message" style="text-align: center; padding: 40px 20px;" aria-live="polite" tabindex="-1" id="successMessage">
+                                <div class="service-icon" style="margin: 0 auto 20px; background: rgba(37, 211, 102, 0.1);">
+                                    <i data-lucide="check-circle-2" style="color: #25d366;" aria-hidden="true"></i>
+                                </div>
+                                <h3 class="section-title" style="font-size: 1.75rem; margin-bottom: 10px;">Message Sent!</h3>
+                                <p style="color: var(--text-secondary); margin-bottom: 30px;">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                                <button class="btn btn-primary btn-lg" onclick="location.reload()">
+                                    Send Another Message
+                                </button>
+                            </div>
+                        `;
+                        lucide.createIcons();
+                        container.style.opacity = '1';
+                        document.getElementById('successMessage').focus();
+                    }, 300);
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                const errorMsg = document.createElement('div');
+                errorMsg.style.cssText = 'background:rgba(239,68,68,0.1);color:#ef4444;padding:15px;border-radius:10px;margin-bottom:20px;font-size:0.875rem;text-align:center;';
+                errorMsg.setAttribute('aria-live', 'polite');
+                errorMsg.textContent = 'Oops! Something went wrong. Please try again or call us directly.';
+
+                const existingError = contactForm.querySelector('.error-message');
+                if (existingError) existingError.remove();
+
+                errorMsg.classList.add('error-message');
+                contactForm.prepend(errorMsg);
+
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
