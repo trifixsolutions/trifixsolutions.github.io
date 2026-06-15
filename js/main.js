@@ -187,18 +187,68 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+
+            // Loading state
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
             
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            // Clear any existing error
+            const existingError = document.getElementById('formError');
+            if (existingError) existingError.remove();
+
+            const formData = new FormData(contactForm);
+            const action = contactForm.getAttribute('action');
+            const ajaxUrl = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+            try {
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (response.ok) {
+                    // Success state
+                    contactForm.innerHTML = `
+                        <div class="success-message" role="alert" aria-live="polite" tabindex="-1" style="background: rgba(37, 211, 102, 0.1); border: 1px solid #25d366; padding: 40px; border-radius: 20px; text-align: center;">
+                            <div style="width: 64px; height: 64px; background: rgba(37, 211, 102, 0.2); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                                <i data-lucide="check-circle" style="color: #25d366; width: 32px; height: 32px;"></i>
+                            </div>
+                            <h3 style="color: #fff; font-family: var(--font-primary); font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;">Message Sent!</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 30px;">Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+                            <button onclick="location.reload()" class="btn btn-primary btn-lg">Send Another Message</button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    contactForm.querySelector('.success-message').focus();
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+
+                const errorMsg = document.createElement('div');
+                errorMsg.id = 'formError';
+                errorMsg.setAttribute('role', 'alert');
+                errorMsg.setAttribute('aria-live', 'polite');
+                errorMsg.style.cssText = 'background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.875rem;';
+                errorMsg.textContent = 'Sorry, something went wrong. Please try again or contact us via WhatsApp.';
+
+                contactForm.prepend(errorMsg);
+
+                // Restore button
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
