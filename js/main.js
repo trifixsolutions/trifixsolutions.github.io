@@ -187,18 +187,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+            contactForm.querySelector('.form-error')?.remove();
+
+            try {
+                const response = await fetch(contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(new FormData(contactForm)))
+                });
+                if (!response.ok) throw new Error();
+                const container = document.querySelector('.contact-form-container');
+                container.innerHTML = `
+                    <div class="success-message" role="status" aria-live="polite" tabindex="-1" style="text-align: center; padding: 40px 0;">
+                        <div class="service-icon" style="margin: 0 auto 20px;"><i data-lucide="check-circle-2"></i></div>
+                        <h3 class="section-title">Message Sent!</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 30px;">We'll get back to you within 24 hours.</p>
+                        <button class="btn btn-primary btn-lg" onclick="location.reload()">Send Another</button>
+                    </div>`;
+                lucide.createIcons();
+                container.querySelector('.success-message').focus();
+            } catch {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
                 lucide.createIcons();
-            }, 3000);
+                contactForm.insertAdjacentHTML('beforeend', '<div class="form-error" role="alert" aria-live="polite" style="color: #ef4444; margin-top: 20px; text-align: center;">Submission failed. Please try again.</div>');
+            }
         });
     }
     
