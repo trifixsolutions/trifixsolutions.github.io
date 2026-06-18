@@ -1,3 +1,7 @@
+## 2026-03-21 - [Navigation Accessibility and Mobile UX Polish]
+**Learning:** Implementing a "Skip to main content" link and wrapping content in a `<main>` tag are essential but often overlooked accessibility features for keyboard navigation. For mobile menus, synchronizing ARIA attributes (`aria-expanded`, `aria-label`) and providing keyboard support (`Escape` to close with focus restoration) significantly improves the experience for assistive technology users. Body scroll locking while the menu is active prevents disorienting background movement on mobile.
+**Action:** Always include a skip-link and `<main>` landmark. For any toggleable overlay, ensure ARIA states are synchronized, the `Escape` key is handled, focus is managed, and background scroll is locked.
+
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
