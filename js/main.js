@@ -23,24 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
+    const updateNavToggle = (isActive) => {
+        navToggle.setAttribute('aria-expanded', isActive);
+        navToggle.setAttribute('aria-label', isActive ? 'Close menu' : 'Open menu');
+        const icon = navToggle.querySelector('i');
+        icon.setAttribute('data-lucide', isActive ? 'x' : 'menu');
+        lucide.createIcons();
+    };
+
     navToggle.addEventListener('click', () => {
         navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
-        }
-        lucide.createIcons();
+        updateNavToggle(navLinks.classList.contains('active'));
     });
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+            updateNavToggle(false);
         });
     });
     
@@ -187,18 +187,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission feedback
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+            const formContainer = contactForm.parentElement;
+
             submitBtn.innerHTML = '<span>Sending...</span>';
             submitBtn.disabled = true;
-            
-            // Re-enable after timeout (form will submit to formsubmit.co)
-            setTimeout(() => {
+
+            try {
+                const response = await fetch(contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(new FormData(contactForm)))
+                });
+                const result = await response.json();
+                if (!response.ok || result.success !== 'true') throw new Error();
+
+                formContainer.innerHTML = `
+                    <div class="success-message" style="text-align: center; padding: 40px 0;" tabindex="-1" id="successView">
+                        <div class="service-icon" style="margin: 0 auto 20px; background: rgba(37, 211, 102, 0.1);">
+                            <i data-lucide="check-circle-2" style="color: #25d366;"></i>
+                        </div>
+                        <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 10px;">Message Sent!</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 30px;">We'll get back to you within 24 hours.</p>
+                        <button onclick="location.reload()" class="btn btn-primary btn-lg">Send Another Message</button>
+                    </div>`;
+                lucide.createIcons();
+                document.getElementById('successView').focus();
+            } catch (err) {
+                let status = document.getElementById('formStatus');
+                if (!status) {
+                    status = document.createElement('div');
+                    status.id = 'formStatus';
+                    status.className = 'form-group';
+                    contactForm.prepend(status);
+                }
+                status.setAttribute('aria-live', 'polite');
+                status.innerHTML = `
+                    <div style="padding: 15px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 10px; color: #ef4444; display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i>
+                        <span>Something went wrong. Please try again.</span>
+                    </div>`;
+                lucide.createIcons();
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-                lucide.createIcons();
-            }, 3000);
+            }
         });
     }
     
