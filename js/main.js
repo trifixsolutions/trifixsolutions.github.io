@@ -22,39 +22,59 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile menu toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+
+    function toggleMenu(isOpen) {
+        const isCurrentlyOpen = navLinks.classList.contains('active');
+        const shouldOpen = isOpen !== undefined ? isOpen : !isCurrentlyOpen;
+
+        navLinks.classList.toggle('active', shouldOpen);
+        navToggle.setAttribute('aria-expanded', shouldOpen);
+        navToggle.setAttribute('aria-label', shouldOpen ? 'Close menu' : 'Open menu');
+
+        // Update icon - Lucide replaces the <i> with <svg>, so we look for both
+        const icon = navToggle.querySelector('[data-lucide]');
+        if (icon) {
+            icon.setAttribute('data-lucide', shouldOpen ? 'x' : 'menu');
+            lucide.createIcons();
         }
-        lucide.createIcons();
-    });
+
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = shouldOpen ? 'hidden' : '';
+    }
+
+    navToggle.addEventListener('click', () => toggleMenu());
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
-        });
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Update focus and URL hash
+                target.focus({ preventScroll: true });
+                if (history.pushState) {
+                    history.pushState(null, null, targetId);
+                }
             }
         });
     });
