@@ -22,26 +22,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile menu toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+
+    const toggleMenu = (isOpen) => {
+        const isExpanded = isOpen !== undefined ? isOpen : !navLinks.classList.contains('active');
+        navLinks.classList.toggle('active', isExpanded);
+        navToggle.setAttribute('aria-expanded', isExpanded);
+        navToggle.setAttribute('aria-label', isExpanded ? 'Close menu' : 'Open menu');
+
+        // Body scroll lock
+        document.body.style.overflow = isExpanded ? 'hidden' : '';
+
         const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+        if (icon) {
+            icon.setAttribute('data-lucide', isExpanded ? 'x' : 'menu');
+            lucide.createIcons();
         }
-        lucide.createIcons();
+    };
+
+    navToggle.addEventListener('click', () => toggleMenu());
+
+    // Escape key to close menu
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            navToggle.focus();
+        }
     });
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
-        });
+        link.addEventListener('click', () => toggleMenu(false));
     });
     
     // Smooth scroll for anchor links
