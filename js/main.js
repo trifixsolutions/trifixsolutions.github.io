@@ -22,26 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile menu toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+
+    const toggleMenu = (isOpen) => {
+        const shouldOpen = isOpen !== undefined ? isOpen : !navLinks.classList.contains('active');
+
+        navLinks.classList.toggle('active', shouldOpen);
+        navToggle.setAttribute('aria-expanded', shouldOpen);
+        navToggle.setAttribute('aria-label', shouldOpen ? 'Close menu' : 'Open menu');
+
+        // Switch Lucide icon
+        const iconElement = navToggle.querySelector('[data-lucide]');
+        if (iconElement) {
+            iconElement.setAttribute('data-lucide', shouldOpen ? 'x' : 'menu');
+            lucide.createIcons();
         }
-        lucide.createIcons();
-    });
+
+        // Lock/unlock body scroll
+        document.body.style.overflow = shouldOpen ? 'hidden' : '';
+    };
+
+    navToggle.addEventListener('click', () => toggleMenu());
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
-        });
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+
+    // Handle Escape key to close menu
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
