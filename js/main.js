@@ -202,6 +202,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // Scroll-Spy: Highlight active navigation link
+    const sections = ['home', 'services', 'about', 'contact'];
+    sections.forEach(id => {
+        ScrollTrigger.create({
+            trigger: `#${id}`,
+            start: 'top 150px',
+            end: 'bottom 150px',
+            onToggle: self => {
+                if (self.isActive) {
+                    navLinks.querySelectorAll('a').forEach(link => {
+                        const isActive = link.getAttribute('href') === `#${id}`;
+                        link.classList.toggle('active', isActive);
+                        if (isActive) link.setAttribute('aria-current', 'location');
+                        else link.removeAttribute('aria-current');
+                    });
+                }
+            }
+        });
+    });
+
     // Parallax effect on hero
     window.addEventListener('scroll', () => {
         const scrolled = window.scrollY;
