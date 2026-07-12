@@ -75,6 +75,27 @@ img {
     padding: 0 20px;
 }
 
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-gradient);
+    color: var(--bg-primary);
+    padding: 10px 20px;
+    border-radius: 0 0 10px 10px;
+    font-weight: 700;
+    z-index: 2000;
+    transition: top var(--transition-medium);
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
 /* ========================================
    NAVIGATION
    ======================================== */
