@@ -46,6 +46,27 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Skip link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 10px 20px;
+    border-radius: 0 0 10px 10px;
+    z-index: 2000;
+    font-weight: 700;
+    transition: top var(--transition-medium);
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: none;
+    box-shadow: 0 5px 20px var(--glow-primary);
+}
+
 body {
     font-family: var(--font-secondary);
     background: var(--bg-primary);
