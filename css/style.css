@@ -54,6 +54,26 @@ body {
     overflow-x: hidden;
 }
 
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 12px 24px;
+    border-radius: 8px;
+    z-index: 2000;
+    font-family: var(--font-primary);
+    font-weight: 700;
+    transition: top var(--transition-medium);
+}
+
+.skip-link:focus {
+    top: 20px;
+    outline: 2px solid var(--text-primary);
+    outline-offset: 4px;
+}
+
 a {
     text-decoration: none;
     color: inherit;
