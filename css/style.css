@@ -35,6 +35,34 @@
     --transition-slow: 0.5s ease;
 }
 
+/* Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--bg-primary);
+    color: var(--accent-primary);
+    padding: 12px 24px;
+    z-index: 9999;
+    border: 1px solid var(--accent-primary);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px var(--glow-primary);
+    font-family: var(--font-primary);
+    font-weight: 600;
+    transition: top var(--transition-fast) ease-in-out;
+}
+
+.skip-link:focus-visible,
+.skip-link:focus {
+    top: 20px;
+    outline: none;
+}
+
+/* Programmatic Focus Reset */
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
 /* Reset & Base */
 *, *::before, *::after {
     margin: 0;

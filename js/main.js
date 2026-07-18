@@ -55,6 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                // Focus target element for proper keyboard navigation order
+                target.focus({ preventScroll: true });
             }
         });
     });
