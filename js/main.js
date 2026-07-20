@@ -23,38 +23,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+    function toggleMenu(isOpen) {
+        if (isOpen) {
+            navLinks.classList.add('active');
+            navToggle.setAttribute('aria-expanded', 'true');
+            navToggle.setAttribute('aria-label', 'Close menu');
+            document.body.style.overflow = 'hidden';
+
+            const icon = navToggle.querySelector('i');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'x');
+            }
         } else {
-            icon.setAttribute('data-lucide', 'menu');
+            navLinks.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', 'Open menu');
+            document.body.style.overflow = '';
+
+            const icon = navToggle.querySelector('i');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'menu');
+            }
         }
         lucide.createIcons();
+    }
+
+    navToggle.addEventListener('click', () => {
+        const isCurrentlyOpen = navLinks.classList.contains('active');
+        toggleMenu(!isCurrentlyOpen);
     });
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+            toggleMenu(false);
         });
     });
     
+    // Close menu on Escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            navToggle.focus();
+        }
+    });
+
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Focus target element for accessibility, preventing unexpected scroll jumps
+                target.focus({ preventScroll: true });
             }
         });
     });
