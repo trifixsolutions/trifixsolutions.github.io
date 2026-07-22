@@ -1128,3 +1128,8 @@ img {
 .channel-item {
     opacity: 0;
 }
+
+/* Accessibility outline reset for programmatically focused sections */
+section[tabindex="-1"]:focus {
+    outline: none;
+}
