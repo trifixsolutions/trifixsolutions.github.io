@@ -1,3 +1,7 @@
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
+
+## 2026-03-23 - [Keyboard Navigation and Programmatic Focus Management in Smooth Scrolling]
+**Learning:** Visual-only scrolling via smooth anchor transitions can leave the keyboard focus state behind at the top of the page, leading to a disconnected experience for keyboard-only or screen-reader users. Programmatically transferring focus (`.focus()`) to the target section (configured with `tabindex="-1"` and focus outlines reset to prevent visual noise) ensures the user's sequential focus matches the visual layout.
+**Action:** When implementing smooth scroll navigation links, always programmatically set `tabindex="-1"` and call `.focus()` on the target element. Add CSS rules (`section[tabindex="-1"]:focus { outline: none; }`) to prevent focus outline borders on section blocks for mouse users while preserving correct screen reader / keyboard tab indexes.
