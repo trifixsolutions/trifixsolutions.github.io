@@ -19,42 +19,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle & state management
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+    function toggleMenu(isOpen) {
         const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
+        if (isOpen) {
+            navLinks.classList.add('active');
+            navbar.classList.add('nav-active');
+            navToggle.setAttribute('aria-expanded', 'true');
+            navToggle.setAttribute('aria-label', 'Close menu');
+            document.body.style.overflow = 'hidden';
             icon.setAttribute('data-lucide', 'x');
         } else {
+            navLinks.classList.remove('active');
+            navbar.classList.remove('nav-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', 'Open menu');
+            document.body.style.overflow = '';
             icon.setAttribute('data-lucide', 'menu');
         }
         lucide.createIcons();
+    }
+
+    navToggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.contains('active');
+        toggleMenu(!isOpen);
     });
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+            toggleMenu(false);
         });
     });
+
+    // Close menu on Escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            navToggle.focus();
+        }
+    });
     
-    // Smooth scroll for anchor links
+    // Smooth scroll for anchor links with focus management
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                // Focus the target programmatically to keep keyboard focus synchronized
+                target.focus();
             }
         });
     });
