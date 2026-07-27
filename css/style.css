@@ -54,6 +54,43 @@ body {
     overflow-x: hidden;
 }
 
+/* Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--bg-primary);
+    color: var(--accent-primary);
+    padding: 10px 20px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 8px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    z-index: 2000;
+    transition: top var(--transition-fast) ease-in-out;
+}
+
+.skip-link:focus-visible, .skip-link:focus {
+    top: 20px;
+    outline: none;
+    box-shadow: 0 0 20px var(--glow-primary);
+}
+
+/* Body and Nav Menu Lock Styles */
+body.menu-open {
+    overflow: hidden;
+}
+
+.navbar.menu-open {
+    background: var(--bg-primary) !important;
+    backdrop-filter: none !important;
+}
+
+/* Programmatic Focus Reset */
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
 a {
     text-decoration: none;
     color: inherit;
