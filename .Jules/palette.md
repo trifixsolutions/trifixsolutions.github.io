@@ -1,3 +1,7 @@
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
+
+## 2026-03-26 - [Accessible Mobile Navigation Overlay and Centralized State]
+**Learning:** When implementing a responsive navigation menu overlay, using a centralized state manager (`toggleMenu`) ensures ARIA attributes (`aria-expanded`, `aria-label`), body scrolling behavior (`overflow: hidden`), and visual classes stay fully synchronized. Moreover, keyboard interactions (such as handling the Escape key) must restore focus explicitly to the trigger element to prevent keyboard focus from being lost. Disabling `backdrop-filter` on scrolling nav ancestors is also vital to avoid clipping issues on fixed descendants.
+**Action:** Always structure responsive menu toggle handlers with a centralized `toggleMenu(isOpen)` function, wire the Escape key, reset scroll states/backdrop filters, and return focus to the toggle button.
