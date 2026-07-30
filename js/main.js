@@ -19,29 +19,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Centralized mobile menu state management
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+    function toggleMenu(isOpen) {
+        if (isOpen) {
+            navLinks.classList.add('active');
+            navbar.classList.add('menu-active');
+            navToggle.setAttribute('aria-expanded', 'true');
+            navToggle.setAttribute('aria-label', 'Close menu');
+
+            // Set data-lucide attribute on the first icon inside navToggle
+            const icon = navToggle.querySelector('[data-lucide]');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'x');
+            }
+
+            // Lock body scroll
+            document.body.style.overflow = 'hidden';
         } else {
-            icon.setAttribute('data-lucide', 'menu');
+            navLinks.classList.remove('active');
+            navbar.classList.remove('menu-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', 'Open menu');
+
+            const icon = navToggle.querySelector('[data-lucide]');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'menu');
+            }
+
+            // Restore body scroll
+            document.body.style.overflow = '';
         }
         lucide.createIcons();
+    }
+
+    navToggle.addEventListener('click', () => {
+        const isCurrentlyExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+        toggleMenu(!isCurrentlyExpanded);
     });
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+            toggleMenu(false);
         });
+    });
+
+    // Close mobile menu on ESC key and restore focus to toggle button
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navToggle.getAttribute('aria-expanded') === 'true') {
+            toggleMenu(false);
+            navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
