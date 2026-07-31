@@ -19,29 +19,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle & state management
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+    function toggleMenu(isOpen) {
+        const isCurrentlyOpen = navLinks.classList.contains('active');
+        const nextState = typeof isOpen === 'boolean' ? isOpen : !isCurrentlyOpen;
+        const navbarEl = document.getElementById('navbar') || navbar;
+
+        navLinks.classList.toggle('active', nextState);
+        if (navbarEl) {
+            navbarEl.classList.toggle('menu-active', nextState);
         }
-        lucide.createIcons();
-    });
+        navToggle.setAttribute('aria-expanded', nextState);
+        navToggle.setAttribute('aria-label', nextState ? 'Close menu' : 'Open menu');
+
+        const icon = navToggle.querySelector('[data-lucide]');
+        if (icon) {
+            icon.setAttribute('data-lucide', nextState ? 'x' : 'menu');
+            lucide.createIcons();
+        }
+        document.body.style.overflow = nextState ? 'hidden' : '';
+    }
+
+    navToggle.addEventListener('click', () => toggleMenu());
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
-        });
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+
+    // Escape key closure with focus restoration
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
