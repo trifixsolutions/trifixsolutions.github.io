@@ -19,29 +19,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle and overlay logic
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+    function toggleMenu(isOpen) {
+        const currentNavbar = document.getElementById('navbar') || navbar;
+        const currentNavToggle = document.getElementById('navToggle') || navToggle;
+        const currentNavLinks = document.getElementById('navLinks') || navLinks;
+
+        currentNavLinks.classList.toggle('active', isOpen);
+        currentNavbar.classList.toggle('mobile-menu-active', isOpen);
+        currentNavToggle.setAttribute('aria-expanded', isOpen);
+        currentNavToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+
+        const icon = currentNavToggle.querySelector('[data-lucide]');
+        if (icon) {
+            icon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
+            lucide.createIcons();
         }
-        lucide.createIcons();
+    }
+
+    navToggle.addEventListener('click', () => {
+        const currentNavLinks = document.getElementById('navLinks') || navLinks;
+        const isOpen = !currentNavLinks.classList.contains('active');
+        toggleMenu(isOpen);
     });
     
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+            toggleMenu(false);
         });
+    });
+
+    // Support keyboard 'Escape' key closure with focus restoration
+    document.addEventListener('keydown', (e) => {
+        const currentNavLinks = document.getElementById('navLinks') || navLinks;
+        const currentNavToggle = document.getElementById('navToggle') || navToggle;
+        if (e.key === 'Escape' && currentNavLinks.classList.contains('active')) {
+            toggleMenu(false);
+            currentNavToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
