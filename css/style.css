@@ -97,6 +97,10 @@ img {
     border-bottom: 1px solid var(--border-color);
 }
 
+.navbar.mobile-menu-active {
+    backdrop-filter: none !important;
+}
+
 .nav-container {
     max-width: var(--container-max);
     margin: 0 auto;
