@@ -35,6 +35,32 @@
     --transition-slow: 0.5s ease;
 }
 
+/* Skip Link styling */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--bg-primary);
+    color: var(--accent-primary);
+    border: 2px solid var(--accent-primary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 10000;
+    transition: top var(--transition-medium);
+}
+
+.skip-link:focus {
+    top: 20px;
+    outline: none;
+    box-shadow: 0 0 15px var(--glow-primary);
+}
+
+/* Reset outline for programmatically focused sections */
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
 /* Reset & Base */
 *, *::before, *::after {
     margin: 0;
@@ -95,6 +121,10 @@ img {
     backdrop-filter: blur(20px);
     padding: 15px 0;
     border-bottom: 1px solid var(--border-color);
+}
+
+.navbar.navbar-menu-active {
+    backdrop-filter: none !important;
 }
 
 .nav-container {
