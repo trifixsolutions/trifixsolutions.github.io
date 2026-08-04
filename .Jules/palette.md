@@ -1,3 +1,7 @@
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
+
+## 2026-04-03 - [Mobile Navigation Containment and Skip Link Focus Management]
+**Learning:** In highly customized dark high-tech themes using elements with CSS `backdrop-filter` (like `.navbar.scrolled`), descendant elements with `position: fixed` (like the mobile `.nav-links` menu) get trapped and bounded by the container's layout. Disabling `backdrop-filter` via a specific parent active class resolves visual layout clipping. Additionally, when using smooth scrolling, pairing visual motion with programmatic `.focus()` on a target with `tabindex="-1"` ensures screen reader and keyboard synchronization without styling side-effects if using `section[tabindex="-1"]:focus { outline: none; }`.
+**Action:** Always disable `backdrop-filter` on active containing blocks during open state mobile navigation, and pair smooth scrolling with programmatic focus and clean outline overrides.

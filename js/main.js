@@ -19,29 +19,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Centralized mobile menu state management
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+
+    function toggleMenu(isOpen) {
+        const toggleBtn = document.getElementById('navToggle') || navToggle;
+        const linksContainer = document.getElementById('navLinks') || navLinks;
+        const navElement = document.getElementById('navbar') || navbar;
+
+        if (!toggleBtn || !linksContainer) return;
+
+        if (isOpen) {
+            linksContainer.classList.add('active');
+            if (navElement) navElement.classList.add('navbar-menu-active');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            toggleBtn.setAttribute('aria-label', 'Close menu');
+            document.body.style.overflow = 'hidden';
+
+            const icon = toggleBtn.querySelector('[data-lucide]');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'x');
+            }
         } else {
-            icon.setAttribute('data-lucide', 'menu');
+            linksContainer.classList.remove('active');
+            if (navElement) navElement.classList.remove('navbar-menu-active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.setAttribute('aria-label', 'Open menu');
+            document.body.style.overflow = '';
+
+            const icon = toggleBtn.querySelector('[data-lucide]');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'menu');
+            }
         }
-        lucide.createIcons();
-    });
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+        }
+    }
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            const linksContainer = document.getElementById('navLinks') || navLinks;
+            const isOpen = linksContainer ? linksContainer.classList.contains('active') : false;
+            toggleMenu(!isOpen);
+        });
+    }
     
     // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
         });
+    }
+
+    // Escape key listener for mobile menu
+    window.addEventListener('keydown', (e) => {
+        const toggleBtn = document.getElementById('navToggle') || navToggle;
+        const linksContainer = document.getElementById('navLinks') || navLinks;
+        if (e.key === 'Escape' && linksContainer && linksContainer.classList.contains('active')) {
+            toggleMenu(false);
+            if (toggleBtn) {
+                toggleBtn.focus();
+            }
+        }
     });
     
     // Smooth scroll for anchor links
@@ -55,6 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                // Focus the target element to maintain keyboard navigation flow
+                target.focus();
             }
         });
     });

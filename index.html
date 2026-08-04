@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <a href="#services" class="skip-link">Skip to main content</a>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
@@ -41,7 +43,7 @@
                     WhatsApp
                 </a>
             </div>
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <button class="nav-toggle" id="navToggle" aria-controls="navLinks" aria-expanded="false" aria-label="Open menu">
                 <i data-lucide="menu"></i>
             </button>
         </div>
@@ -100,7 +102,7 @@
     </section>
 
     <!-- Services Section -->
-    <section class="services" id="services">
+    <section class="services" id="services" tabindex="-1">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">What We Offer</span>
@@ -245,7 +247,7 @@
     </section>
 
     <!-- About Section -->
-    <section class="about" id="about">
+    <section class="about" id="about" tabindex="-1">
         <div class="container">
             <div class="about-grid">
                 <div class="about-image">
@@ -291,7 +293,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="contact" id="contact">
+    <section class="contact" id="contact" tabindex="-1">
         <div class="container">
             <div class="contact-grid">
                 <div class="contact-info">
