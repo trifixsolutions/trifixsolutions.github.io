@@ -1,3 +1,7 @@
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
+
+## 2026-03-21 - [Centralized Mobile Menu State and Containing Blocks]
+**Learning:** An ancestor element with CSS `backdrop-filter` (like `.navbar.scrolled`) acts as a containing block for descendants with `position: fixed` (like the mobile `.nav-links`), confining them within the nav bar bounds. Overriding `backdrop-filter` to `none !important` when active preserves the overlay layout. In addition, centralizing navigation state in a single JS toggle controller prevents dynamic ARIA attributes (expanded/labels) from going out of sync.
+**Action:** When using fixed-position navigation overlays, always check for ancestor `backdrop-filter` rules. Manage mobile overlay state via a single controller function to synchronize visual active classes, aria-expanded, aria-label, and body overflow-hidden scroll locking.

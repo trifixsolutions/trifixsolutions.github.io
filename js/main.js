@@ -23,25 +23,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+    function toggleMenu(isOpen) {
+        const toggleBtn = document.getElementById('navToggle') || navToggle;
+        const linksContainer = document.getElementById('navLinks') || navLinks;
+        if (!toggleBtn || !linksContainer) return;
+
+        const currentlyActive = linksContainer.classList.contains('active');
+        const shouldOpen = typeof isOpen === 'boolean' ? isOpen : !currentlyActive;
+
+        if (shouldOpen) {
+            linksContainer.classList.add('active');
+            document.body.classList.add('menu-active');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            toggleBtn.setAttribute('aria-label', 'Close menu');
+            const icon = toggleBtn.querySelector('[data-lucide]') || toggleBtn.querySelector('i');
+            if (icon) icon.setAttribute('data-lucide', 'x');
         } else {
-            icon.setAttribute('data-lucide', 'menu');
+            linksContainer.classList.remove('active');
+            document.body.classList.remove('menu-active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.setAttribute('aria-label', 'Open menu');
+            const icon = toggleBtn.querySelector('[data-lucide]') || toggleBtn.querySelector('i');
+            if (icon) icon.setAttribute('data-lucide', 'menu');
         }
-        lucide.createIcons();
-    });
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    }
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => toggleMenu());
+    }
     
     // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
         });
+    }
+
+    // Close menu on Escape key press and restore focus to toggle button
+    document.addEventListener('keydown', (e) => {
+        const linksContainer = document.getElementById('navLinks') || navLinks;
+        const toggleBtn = document.getElementById('navToggle') || navToggle;
+        if (e.key === 'Escape' && linksContainer && linksContainer.classList.contains('active')) {
+            toggleMenu(false);
+            if (toggleBtn) toggleBtn.focus();
+        }
     });
     
     // Smooth scroll for anchor links
