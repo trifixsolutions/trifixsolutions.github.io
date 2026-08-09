@@ -97,6 +97,17 @@ img {
     border-bottom: 1px solid var(--border-color);
 }
 
+/* Disable backdrop-filter when mobile menu is active to avoid containing block bugs */
+.navbar.mobile-nav-active {
+    backdrop-filter: none !important;
+    background: rgba(10, 15, 28, 1) !important;
+}
+
+/* Reset outline on programmatic focus for click users, but keep outlines for keyboard focus-visible */
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
 .nav-container {
     max-width: var(--container-max);
     margin: 0 auto;

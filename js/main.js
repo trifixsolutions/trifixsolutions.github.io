@@ -19,42 +19,85 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Centralized mobile menu toggle helper
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+
+    const toggleMenu = (isOpen) => {
+        const toggleBtn = document.getElementById('navToggle') || navToggle;
+        const linksContainer = document.getElementById('navLinks') || navLinks;
+        const navElement = document.getElementById('navbar') || document.querySelector('.navbar') || navbar;
+
+        if (isOpen) {
+            linksContainer.classList.add('active');
+            navElement.classList.add('mobile-nav-active');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            toggleBtn.setAttribute('aria-label', 'Close menu');
+            document.body.style.overflow = 'hidden';
+
+            const icon = toggleBtn.querySelector('[data-lucide]');
+            if (icon) icon.setAttribute('data-lucide', 'x');
         } else {
-            icon.setAttribute('data-lucide', 'menu');
+            linksContainer.classList.remove('active');
+            navElement.classList.remove('mobile-nav-active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.setAttribute('aria-label', 'Open menu');
+            document.body.style.overflow = '';
+
+            const icon = toggleBtn.querySelector('[data-lucide]');
+            if (icon) icon.setAttribute('data-lucide', 'menu');
         }
         lucide.createIcons();
-    });
-    
-    // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    };
+
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+            const linksContainer = document.getElementById('navLinks') || navLinks;
+            const isOpen = linksContainer.classList.contains('active');
+            toggleMenu(!isOpen);
         });
-    });
+
+        // Close mobile menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
+        });
+
+        // Keyboard accessibility: Escape key closes the menu and returns focus
+        document.addEventListener('keydown', (e) => {
+            const linksContainer = document.getElementById('navLinks') || navLinks;
+            if (e.key === 'Escape' && linksContainer.classList.contains('active')) {
+                toggleMenu(false);
+                const toggleBtn = document.getElementById('navToggle') || navToggle;
+                if (toggleBtn) toggleBtn.focus();
+            }
+        });
+    }
     
-    // Smooth scroll for anchor links
+    // Smooth scroll for anchor links with programmatic focus management
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                return;
+            }
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                // Maintain correct keyboard navigation order by programmatically focusing the target section
+                setTimeout(() => {
+                    target.focus();
+                }, 600); // Allow smooth scroll to complete or start before focusing
             }
         });
     });
