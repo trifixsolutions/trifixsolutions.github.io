@@ -54,6 +54,33 @@ body {
     overflow-x: hidden;
 }
 
+/* Skip to main content link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--bg-primary);
+    color: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+    padding: 10px 20px;
+    z-index: 9999;
+    transition: top var(--transition-fast);
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: var(--font-primary);
+}
+
+.skip-link:focus {
+    top: 20px;
+    outline: 2px solid var(--accent-primary);
+}
+
+/* Reset focus outlines on programmatically focused sections */
+section[tabindex="-1"]:focus,
+main[tabindex="-1"]:focus {
+    outline: none;
+}
+
 a {
     text-decoration: none;
     color: inherit;
@@ -95,6 +122,12 @@ img {
     backdrop-filter: blur(20px);
     padding: 15px 0;
     border-bottom: 1px solid var(--border-color);
+}
+
+.navbar.mobile-menu-active,
+.navbar.mobile-menu-active.scrolled {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 .nav-container {
