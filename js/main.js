@@ -19,42 +19,97 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Centralized mobile menu toggle control
+    function toggleMenu(isOpen) {
+        const currentToggle = document.getElementById('navToggle');
+        const currentLinks = document.getElementById('navLinks');
+        const currentNavbar = document.getElementById('navbar') || document.querySelector('.navbar') || navbar;
+
+        if (!currentToggle || !currentLinks) return;
+
+        if (isOpen) {
+            currentLinks.classList.add('active');
+            currentToggle.setAttribute('aria-expanded', 'true');
+            currentToggle.setAttribute('aria-label', 'Close menu');
+            document.body.style.overflow = 'hidden';
+            if (currentNavbar) {
+                currentNavbar.classList.add('mobile-menu-active');
+            }
+
+            // Icon transformation with robust selector
+            const icon = currentToggle.querySelector('[data-lucide]');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'x');
+                lucide.createIcons();
+            }
+        } else {
+            currentLinks.classList.remove('active');
+            currentToggle.setAttribute('aria-expanded', 'false');
+            currentToggle.setAttribute('aria-label', 'Open menu');
+            document.body.style.overflow = '';
+            if (currentNavbar) {
+                currentNavbar.classList.remove('mobile-menu-active');
+            }
+
+            // Icon transformation with robust selector
+            const icon = currentToggle.querySelector('[data-lucide]');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            }
+        }
+    }
+
+    // Mobile menu toggle event
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
-        }
-        lucide.createIcons();
-    });
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+            const isOpen = navLinks.classList.contains('active');
+            toggleMenu(!isOpen);
+        });
+    }
     
     // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
         });
+    }
+
+    // Escape key closure for mobile menu with focus restoration
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const currentLinks = document.getElementById('navLinks');
+            if (currentLinks && currentLinks.classList.contains('active')) {
+                toggleMenu(false);
+                const currentToggle = document.getElementById('navToggle');
+                if (currentToggle) {
+                    currentToggle.focus();
+                }
+            }
+        }
     });
     
-    // Smooth scroll for anchor links
+    // Smooth scroll for anchor links with focus management
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            const target = document.querySelector(href);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Focus management
+                target.focus({ preventScroll: true });
             }
         });
     });
