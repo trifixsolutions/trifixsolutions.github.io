@@ -23,38 +23,74 @@ document.addEventListener('DOMContentLoaded', () => {
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+    // Central mobile menu state management function
+    function toggleMenu(isOpen) {
+        const icon = navToggle ? navToggle.querySelector('[data-lucide], i') : null;
+        const currentNavbar = document.getElementById('navbar') || document.querySelector('.navbar');
+
+        if (isOpen) {
+            navLinks.classList.add('active');
+            if (currentNavbar) currentNavbar.classList.add('nav-active');
+            if (navToggle) {
+                navToggle.setAttribute('aria-expanded', 'true');
+                navToggle.setAttribute('aria-label', 'Close menu');
+            }
+            if (icon) icon.setAttribute('data-lucide', 'x');
+            document.body.style.overflow = 'hidden';
         } else {
-            icon.setAttribute('data-lucide', 'menu');
-        }
-        lucide.createIcons();
-    });
-    
-    // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
             navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
+            if (currentNavbar) currentNavbar.classList.remove('nav-active');
+            if (navToggle) {
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.setAttribute('aria-label', 'Open menu');
+            }
+            if (icon) icon.setAttribute('data-lucide', 'menu');
+            document.body.style.overflow = '';
+        }
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
             lucide.createIcons();
+        }
+    }
+
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+            const isOpen = navLinks.classList.contains('active');
+            toggleMenu(!isOpen);
         });
-    });
+
+        // Close mobile menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
+        });
+
+        // Escape key listener for mobile menu with focus restoration
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                toggleMenu(false);
+                navToggle.focus();
+            }
+        });
+    }
     
-    // Smooth scroll for anchor links
+    // Smooth scroll for anchor links with focus management
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const href = this.getAttribute('href');
+            const target = document.querySelector(href);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Keyboard focus management
+                setTimeout(() => {
+                    target.focus({ preventScroll: true });
+                }, 800); // Wait for smooth scroll animation to finish
             }
         });
     });
