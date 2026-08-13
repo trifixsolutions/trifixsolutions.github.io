@@ -97,6 +97,14 @@ img {
     border-bottom: 1px solid var(--border-color);
 }
 
+.navbar.nav-active {
+    backdrop-filter: none !important;
+}
+
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
 .nav-container {
     max-width: var(--container-max);
     margin: 0 auto;
