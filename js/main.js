@@ -19,29 +19,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle & accessible overlay
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
+    const toggleMenu = (isOpen) => {
+        const toggleEl = document.getElementById('navToggle') || navToggle;
+        const linksEl = document.getElementById('navLinks') || navLinks;
+        const navbarEl = document.getElementById('navbar') || document.querySelector('.navbar') || (typeof navbar !== 'undefined' ? navbar : null);
+        if (!toggleEl || !linksEl) return;
+
+        const icon = toggleEl.querySelector('[data-lucide]') || toggleEl.querySelector('i');
+
+        if (isOpen) {
+            linksEl.classList.add('active');
+            if (navbarEl) navbarEl.classList.add('nav-active');
+            toggleEl.setAttribute('aria-expanded', 'true');
+            toggleEl.setAttribute('aria-label', 'Close menu');
+            if (icon) icon.setAttribute('data-lucide', 'x');
+            document.body.style.overflow = 'hidden';
         } else {
-            icon.setAttribute('data-lucide', 'menu');
+            linksEl.classList.remove('active');
+            if (navbarEl) navbarEl.classList.remove('nav-active');
+            toggleEl.setAttribute('aria-expanded', 'false');
+            toggleEl.setAttribute('aria-label', 'Open menu');
+            if (icon) icon.setAttribute('data-lucide', 'menu');
+            document.body.style.overflow = '';
         }
         lucide.createIcons();
-    });
-    
-    // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    };
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            const linksEl = document.getElementById('navLinks') || navLinks;
+            const isCurrentlyOpen = linksEl ? linksEl.classList.contains('active') : false;
+            toggleMenu(!isCurrentlyOpen);
         });
+    }
+    
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const linksEl = document.getElementById('navLinks') || navLinks;
+            if (linksEl && linksEl.classList.contains('active')) {
+                toggleMenu(false);
+                const toggleEl = document.getElementById('navToggle') || navToggle;
+                if (toggleEl) toggleEl.focus();
+            }
+        }
     });
     
     // Smooth scroll for anchor links
