@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Skip to main content link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
@@ -47,8 +50,10 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
+    <!-- Main Content -->
+    <main id="main-content" tabindex="-1">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
         <div class="hero-video-container">
             <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80">
                 <source src="https://cdn.coverr.co/videos/coverr-network-cables-in-a-server-room-5764/1080p.mp4" type="video/mp4">
@@ -396,6 +401,7 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
