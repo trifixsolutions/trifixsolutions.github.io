@@ -19,30 +19,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle logic
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+
+    function toggleMenu(isOpen) {
+        const active = typeof isOpen === 'boolean' ? isOpen : !navLinks.classList.contains('active');
+        navLinks.classList.toggle('active', active);
+
+        const navContainer = document.getElementById('navbar') || document.querySelector('.navbar') || navbar;
+        if (navContainer) navContainer.classList.toggle('nav-active', active);
+
+        navToggle.setAttribute('aria-expanded', active ? 'true' : 'false');
+        navToggle.setAttribute('aria-label', active ? 'Close menu' : 'Open menu');
+        document.body.style.overflow = active ? 'hidden' : '';
+
+        const icon = navToggle.querySelector('[data-lucide]');
+        if (icon) {
+            icon.setAttribute('data-lucide', active ? 'x' : 'menu');
+            if (window.lucide) lucide.createIcons();
         }
-        lucide.createIcons();
-    });
-    
-    // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    }
+
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => toggleMenu());
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
         });
-    });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                toggleMenu(false);
+                navToggle.focus();
+            }
+        });
+    }
     
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
