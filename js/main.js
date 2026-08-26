@@ -44,19 +44,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Smooth scroll for anchor links
+    // Smooth scroll for anchor links with focus management
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const href = this.getAttribute('href');
+            if (!href || href === '#') return;
+            const target = document.querySelector(href);
             if (target) {
+                e.preventDefault();
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                if (!target.hasAttribute('tabindex')) {
+                    target.setAttribute('tabindex', '-1');
+                }
+                target.focus({ preventScroll: true });
             }
         });
+    });
+
+    // Scroll-Spy using GSAP ScrollTrigger
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.nav-links a');
+    sections.forEach(section => {
+        const id = section.getAttribute('id');
+        const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+        if (link) {
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top 40%',
+                end: 'bottom 40%',
+                onToggle: self => {
+                    if (self.isActive) {
+                        navItems.forEach(item => {
+                            item.classList.remove('active');
+                            item.removeAttribute('aria-current');
+                        });
+                        link.classList.add('active');
+                        link.setAttribute('aria-current', 'location');
+                    }
+                }
+            });
+        }
     });
     
     // Hero animations
