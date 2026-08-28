@@ -42,6 +42,31 @@
     box-sizing: border-box;
 }
 
+/* Accessibility Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 1rem;
+    z-index: 9999;
+    padding: 12px 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    font-weight: 700;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+    top: 1rem;
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+main:focus {
+    outline: none;
+}
+
 html {
     scroll-behavior: smooth;
 }
