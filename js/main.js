@@ -19,29 +19,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle with centralized state management and ARIA synchronization
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+    function toggleMenu(isOpen) {
+        if (!navToggle || !navLinks) return;
+        const shouldOpen = isOpen !== undefined ? isOpen : !navLinks.classList.contains('active');
+        const navEl = document.getElementById('navbar') || navbar;
+
+        navLinks.classList.toggle('active', shouldOpen);
+        if (navEl) navEl.classList.toggle('nav-active', shouldOpen);
+        navToggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+        navToggle.setAttribute('aria-label', shouldOpen ? 'Close menu' : 'Open menu');
+        document.body.style.overflow = shouldOpen ? 'hidden' : '';
+
+        const icon = navToggle.querySelector('[data-lucide]') || navToggle.querySelector('i') || navToggle.querySelector('svg');
+        if (icon) {
+            icon.setAttribute('data-lucide', shouldOpen ? 'x' : 'menu');
+            if (window.lucide) lucide.createIcons();
         }
-        lucide.createIcons();
-    });
+    }
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => toggleMenu());
+    }
     
     // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
         });
+    }
+
+    // Keyboard support: Escape key closes menu and restores focus to toggle button
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            if (navToggle) navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
