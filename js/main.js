@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                target.focus();
             }
         });
     });
