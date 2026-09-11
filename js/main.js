@@ -211,6 +211,25 @@ document.addEventListener('DOMContentLoaded', () => {
             heroContent.style.opacity = 1 - (scrolled / window.innerHeight);
         }
     });
+
+    // Back to Top functionality
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
     
     console.log('🚀 Trifix Solutions website loaded');
 });
