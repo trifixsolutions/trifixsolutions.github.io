@@ -44,17 +44,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Smooth scroll for anchor links
+    // Smooth scroll for anchor links & keyboard focus management
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (!targetId) return;
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+
+            if (targetId === '#') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            const target = document.querySelector(targetId);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                if (!target.hasAttribute('tabindex')) {
+                    target.setAttribute('tabindex', '-1');
+                }
+                target.focus();
             }
         });
     });

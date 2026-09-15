@@ -54,6 +54,33 @@ body {
     overflow-x: hidden;
 }
 
+/* Accessibility Skip Link & Focus Reset */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    z-index: 10000;
+    padding: 12px 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    font-weight: 700;
+    font-family: var(--font-primary);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px var(--glow-primary);
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: 20px;
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+main[tabindex="-1"]:focus,
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
 a {
     text-decoration: none;
     color: inherit;
