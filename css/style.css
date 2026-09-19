@@ -54,6 +54,34 @@ body {
     overflow-x: hidden;
 }
 
+/* Accessibility: Skip link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    z-index: 9999;
+    padding: 12px 20px;
+    background: var(--accent-gradient);
+    color: var(--bg-primary);
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px var(--glow-primary);
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+    top: 20px;
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+main[tabindex="-1"]:focus {
+    outline: none;
+}
+
 a {
     text-decoration: none;
     color: inherit;
