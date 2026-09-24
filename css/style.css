@@ -54,6 +54,37 @@ body {
     overflow-x: hidden;
 }
 
+/* Accessibility & Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    z-index: 2000;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 15px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
 a {
     text-decoration: none;
     color: inherit;
