@@ -46,6 +46,33 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Skip link for accessibility */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 15px;
+    background: var(--bg-primary);
+    color: var(--accent-primary);
+    padding: 12px 20px;
+    z-index: 2000;
+    border: 2px solid var(--accent-primary);
+    border-radius: 8px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 30px var(--glow-primary);
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: 15px;
+    outline: none;
+}
+
+main[tabindex="-1"]:focus {
+    outline: none;
+}
+
 body {
     font-family: var(--font-secondary);
     background: var(--bg-primary);
