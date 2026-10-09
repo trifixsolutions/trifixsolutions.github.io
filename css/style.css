@@ -46,6 +46,33 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 15px;
+    z-index: 9999;
+    padding: 12px 20px;
+    background: var(--bg-card);
+    color: var(--accent-primary);
+    border: 2px solid var(--accent-primary);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 15px;
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+main[tabindex="-1"]:focus {
+    outline: none;
+}
+
 body {
     font-family: var(--font-secondary);
     background: var(--bg-primary);
@@ -95,6 +122,10 @@ img {
     backdrop-filter: blur(20px);
     padding: 15px 0;
     border-bottom: 1px solid var(--border-color);
+}
+
+.navbar.nav-active {
+    backdrop-filter: none !important;
 }
 
 .nav-container {
