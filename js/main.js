@@ -19,36 +19,59 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle & accessible state management
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+    const toggleMenu = (isOpen) => {
+        const navbarEl = document.getElementById('navbar');
+        if (navLinks) navLinks.classList.toggle('active', isOpen);
+        if (navbarEl) navbarEl.classList.toggle('nav-active', isOpen);
+        if (navToggle) {
+            navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+            const icon = navToggle.querySelector('[data-lucide], i');
+            if (icon) {
+                icon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
+                if (window.lucide && typeof lucide.createIcons === 'function') {
+                    lucide.createIcons();
+                }
+            }
         }
-        lucide.createIcons();
-    });
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    };
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            const isOpen = navLinks ? navLinks.classList.contains('active') : false;
+            toggleMenu(!isOpen);
+        });
+    }
     
     // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(false);
+            });
         });
+    }
+
+    // Keyboard Escape to close mobile navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            if (navToggle) navToggle.focus();
+        }
     });
     
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (!href || href === '#') return;
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(href);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({

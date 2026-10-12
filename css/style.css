@@ -35,6 +35,24 @@
     --transition-slow: 0.5s ease;
 }
 
+/* Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--accent-gradient);
+    color: var(--bg-primary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 9999;
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: 15px;
+}
+
 /* Reset & Base */
 *, *::before, *::after {
     margin: 0;
@@ -95,6 +113,10 @@ img {
     backdrop-filter: blur(20px);
     padding: 15px 0;
     border-bottom: 1px solid var(--border-color);
+}
+
+.navbar.nav-active {
+    backdrop-filter: none !important;
 }
 
 .nav-container {
