@@ -75,6 +75,34 @@ img {
     padding: 0 20px;
 }
 
+/* Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    z-index: 9999;
+    padding: 12px 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: top var(--transition-fast);
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+}
+
+.skip-link:focus {
+    top: 15px;
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+main:focus {
+    outline: none;
+}
+
 /* ========================================
    NAVIGATION
    ======================================== */
