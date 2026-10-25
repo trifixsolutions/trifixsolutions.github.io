@@ -47,14 +47,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            if (!targetId || targetId === '#') return;
+
+            const target = document.querySelector(targetId);
             if (target) {
+                e.preventDefault();
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+
+                // Focus target if focusable or set temporary tabindex
+                if (!target.hasAttribute('tabindex')) {
+                    target.setAttribute('tabindex', '-1');
+                }
+                target.focus({ preventScroll: true });
             }
         });
     });
