@@ -35,6 +35,31 @@
     --transition-slow: 0.5s ease;
 }
 
+/* Skip Link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    z-index: 9999;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 12px 20px;
+    font-weight: 700;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: 15px;
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+main[tabindex="-1"]:focus {
+    outline: none;
+}
+
 /* Reset & Base */
 *, *::before, *::after {
     margin: 0;
