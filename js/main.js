@@ -22,27 +22,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile menu toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+    const headerNav = document.getElementById('navbar') || navbar;
+
+    function toggleMenu(isOpen) {
+        if (!navToggle || !navLinks) return;
+        const activeState = typeof isOpen === 'boolean' ? isOpen : !navLinks.classList.contains('active');
+
+        navLinks.classList.toggle('active', activeState);
+        if (headerNav) {
+            headerNav.classList.toggle('nav-active', activeState);
         }
-        lucide.createIcons();
-    });
-    
-    // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+
+        navToggle.setAttribute('aria-expanded', activeState ? 'true' : 'false');
+        navToggle.setAttribute('aria-label', activeState ? 'Close menu' : 'Open menu');
+        document.body.style.overflow = activeState ? 'hidden' : '';
+
+        const icon = navToggle.querySelector('[data-lucide]');
+        if (icon) {
+            icon.setAttribute('data-lucide', activeState ? 'x' : 'menu');
+            if (window.lucide && typeof lucide.createIcons === 'function') {
+                lucide.createIcons();
+            }
+        }
+    }
+
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => toggleMenu());
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
         });
-    });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                toggleMenu(false);
+                navToggle.focus();
+            }
+        });
+    }
     
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
