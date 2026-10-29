@@ -19,36 +19,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Mobile menu toggle
+    // Mobile menu toggle & accessible state management
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = navToggle.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.setAttribute('data-lucide', 'x');
-        } else {
-            icon.setAttribute('data-lucide', 'menu');
+    function toggleMenu(isOpen) {
+        if (!navToggle || !navLinks) return;
+        const navContainer = document.getElementById('navbar') || navbar;
+        const shouldOpen = typeof isOpen === 'boolean' ? isOpen : !navLinks.classList.contains('active');
+
+        navLinks.classList.toggle('active', shouldOpen);
+        if (navContainer) navContainer.classList.toggle('nav-active', shouldOpen);
+
+        navToggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+        navToggle.setAttribute('aria-label', shouldOpen ? 'Close menu' : 'Open menu');
+        document.body.style.overflow = shouldOpen ? 'hidden' : '';
+
+        const icon = navToggle.querySelector('[data-lucide]') || navToggle.querySelector('i, svg');
+        if (icon) {
+            icon.setAttribute('data-lucide', shouldOpen ? 'x' : 'menu');
         }
-        lucide.createIcons();
-    });
-    
-    // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
+        if (window.lucide) {
             lucide.createIcons();
+        }
+    }
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => toggleMenu());
+    }
+
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
         });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+            if (navToggle) navToggle.focus();
+        }
     });
-    
+
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (!href || href === '#') return;
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(href);
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({
