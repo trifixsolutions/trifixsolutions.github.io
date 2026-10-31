@@ -186,6 +186,13 @@ img {
     border: none;
     color: var(--text-primary);
     cursor: pointer;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.nav-toggle:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }
 
 /* ========================================
@@ -1023,12 +1030,13 @@ img {
 
 @media (max-width: 768px) {
     .nav-links,
-    .nav-phone {
+    .nav-actions {
         display: none;
     }
     
     .nav-toggle {
         display: block;
+        z-index: 1001;
     }
     
     .nav-links {
