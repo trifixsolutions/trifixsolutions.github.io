@@ -42,6 +42,34 @@
     box-sizing: border-box;
 }
 
+:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+section[tabindex="-1"]:focus {
+    outline: none;
+}
+
+/* Skip to content link */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    z-index: 10001;
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: 15px;
+}
+
 html {
     scroll-behavior: smooth;
 }
