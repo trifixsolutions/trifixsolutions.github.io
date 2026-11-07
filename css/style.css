@@ -1023,12 +1023,17 @@ img {
 
 @media (max-width: 768px) {
     .nav-links,
-    .nav-phone {
+    .nav-actions {
         display: none;
     }
-    
+
+    .navbar.menu-open {
+        backdrop-filter: none !important;
+    }
+
     .nav-toggle {
         display: block;
+        z-index: 1001;
     }
     
     .nav-links {

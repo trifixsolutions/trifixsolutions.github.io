@@ -1,3 +1,7 @@
 ## 2026-03-20 - [Accessible Form Feedback and Micro-UX]
 **Learning:** Replacing blocking browser `alert()` calls with in-page, asynchronous feedback using `aria-live="polite"` significantly improves the user experience for both sighted and screen-reader users. Additionally, combining a button loading state ("Sending...") with an immediate success message provides a responsive and satisfying micro-UX.
 **Action:** Always prefer in-page status messages with `aria-live` and use button loading states for async actions. Link labels explicitly using `id`/`for` and provide `autocomplete` hints for common fields like `name` and `email`.
+
+## 2026-03-22 - [Mobile Overlay Containing Blocks and Icon Lifecycles]
+**Learning:** When using fixed-position navigation overlays inside a navbar that applies `backdrop-filter`, browsers establish a new containing block on the ancestor, clipping fullscreen mobile overlays to the navbar's height. Additionally, libraries like Lucide replace `<i>` tags with `<svg>` tags during DOM initialization, causing subsequent queries for `i` to return `null` and break interaction toggles.
+**Action:** Disable `backdrop-filter` on the navbar when the mobile menu is open, query icons with `[data-lucide]` rather than tag names, and always synchronize ARIA states (`aria-expanded`, `aria-label`), keyboard navigation (`Escape` closing with focus restoration), and scroll locking in a centralized menu toggle handler.
